@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TKC Fumigaciones · Informe Digital Junio 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --p:#250045;--pm:#3F3A66;--b:#1A7DC4;--bl:#4AABE8;
+  --g:#10B981;--r:#EF4444;--a:#F59E0B;
+  --lg:#F3F4F6;--border:#E5E7EB;--wh:#fff;
+  --txt:#0F172A;--txm:#374151;--gr:#6B7280;
+  --sh:0 2px 12px rgba(37,0,69,.09);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{max-width:100%;overflow-x:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#EFF1F7;color:var(--txt);font-size:14px;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a0030,#250045 55%,#3F3A66);padding:20px 32px 0;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;top:-80px;right:-40px;width:320px;height:320px;background:radial-gradient(circle,rgba(74,171,232,.15),transparent 70%);border-radius:50%;}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;position:relative;z-index:1;}
+.hero-title h1{font-size:22px;font-weight:800;color:#fff;}
+.hero-title h1 span{color:var(--bl);}
+.hero-title p{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.hero-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 12px;text-align:right;}
+.hero-chip .cl{font-size:8px;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+.hero-chip .cv{font-size:12px;font-weight:700;color:#fff;margin-top:1px;}
+.hero-stats{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid rgba(255,255,255,.08);}
+.hs{padding:14px 16px;border-right:1px solid rgba(255,255,255,.08);}
+.hs:last-child{border-right:none;}
+.hs .hl{font-size:8px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.hs .hv{font-size:22px;font-weight:800;color:#fff;line-height:1;}
+.hs .hc{font-size:10px;font-weight:600;margin-top:3px;}
+.hc.up{color:#34D399;}.hc.dn{color:#F87171;}.hc.na{color:rgba(255,255,255,.3);}
+
+/* CONTROLS */
+.qnav{background:#fff;padding:14px 32px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.qtab{border:1px solid var(--border);background:#fff;border-radius:10px;padding:14px 16px 28px;text-align:left;cursor:pointer;transition:all .18s;min-height:82px;position:relative;overflow:hidden;}
+.qtab:after{content:"Click para ver";position:absolute;right:12px;bottom:10px;font-size:9px;font-weight:800;color:var(--b);opacity:.55;transform:translateY(2px);transition:all .18s;}
+.qtab:hover{border-color:#C7D2E8;box-shadow:var(--sh);transform:translateY(-2px);}
+.qtab:hover:after{opacity:1;transform:translateY(0);}
+.qtab.active{background:linear-gradient(135deg,#250045,#3F3A66);border-color:#250045;color:#fff;box-shadow:0 8px 20px rgba(37,0,69,.18);}
+.qtab.active:after{content:"Viendo ahora";color:#fff;opacity:.72;}
+.qtab-k{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--b);margin-bottom:5px;}
+.qtab.active .qtab-k{color:var(--bl);}
+.qtab-t{font-size:16px;font-weight:800;line-height:1.15;}
+.qtab-d{font-size:11px;color:var(--gr);margin-top:5px;line-height:1.35;}
+.qtab.active .qtab-d{color:rgba(255,255,255,.68);}
+.ctrl{background:#fff;border-bottom:1px solid var(--border);padding:8px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.net-tabs{display:flex;gap:5px;flex-wrap:wrap;}
+.ntab{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--lg);color:var(--gr);transition:all .18s;}
+.ntab:hover{background:#ddd;}
+.ntab.active{color:#fff;}
+.ntab.active.all{background:var(--p);}
+.ntab.active.fb{background:#1877F2;}
+.ntab.active.ig{background:linear-gradient(135deg,#833AB4,#E1306C);}
+.ntab.active.tt{background:#111;}
+.ntab.active.yt{background:#CC0000;}
+.ntab.active.li{background:#0A66C2;}
+.ndot{width:7px;height:7px;border-radius:50%;}
+.ctrl-r{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.tgl-wrap{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;color:var(--gr);cursor:pointer;white-space:nowrap;}
+.tgl{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;flex-shrink:0;transition:background .2s;}
+.tgl.on{background:var(--b);}
+.tgl::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tgl.on::after{left:18px;}
+.vtabs{display:flex;gap:3px;background:var(--lg);border-radius:8px;padding:3px;}
+.vt{padding:4px 11px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:transparent;color:var(--gr);transition:all .15s;}
+.vt.active{background:#fff;color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.1);}
+.edit-btn{background:var(--p);color:#fff;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:600;}
+/* SECTION NAV — prominent */
+.snav{background:#fff;border-bottom:2px solid var(--border);padding:0 32px;display:flex;gap:0;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.sn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 28px;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;min-width:100px;white-space:nowrap;border:none;background:none;color:var(--gr);}
+.sn:hover{background:#FAFAFC;color:var(--txt);}
+.sn.active{border-bottom:3px solid var(--p);color:var(--p);}
+.sn-icon{font-size:22px;line-height:1;}
+.sn-label{font-size:11px;font-weight:700;letter-spacing:.3px;}
+.sn-desc{font-size:9px;color:var(--gr);margin-top:1px;}
+.sn.active .sn-label{color:var(--p);}
+.sn.active .sn-desc{color:var(--pm);}
+/* ADMIN BAR — only visible in admin mode */
+.admin-bar{display:none;background:#1a0030;padding:6px 32px;align-items:center;gap:12px;}
+.admin-bar.show{display:flex;}
+.admin-label{font-size:10px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.admin-btn{background:rgba(255,255,255,.15);color:#fff;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;}
+.admin-btn:hover{background:rgba(255,255,255,.25);}
+/* STRATEGY TABS */
+.strat-tabs{display:flex;gap:0;background:#fff;border-radius:12px 12px 0 0;border:1px solid var(--border);border-bottom:none;overflow:hidden;margin-bottom:0;}
+.stab{flex:1;padding:14px 20px;cursor:pointer;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gr);transition:all .2s;text-align:center;}
+.stab.active.organic{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);color:#065F46;}
+.stab.active.paid{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);color:#1E40AF;}
+.stab:not(.active):hover{background:var(--lg);}
+.strat-content{background:#fff;border-radius:0 0 12px 12px;border:1px solid var(--border);padding:24px;}
+
+
+/* LAYOUT */
+.main{padding:20px 32px;max-width:1440px;margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+@media(max-width:1200px){.g5{grid-template-columns:repeat(3,1fr);}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.g5,.g3,.g2,.qnav{grid-template-columns:1fr;}.main{padding:12px 14px;}.ctrl,.qnav{padding:8px 14px;}}
+
+/* CARDS */
+.card{background:#fff;border-radius:14px;border:1px solid var(--border);box-shadow:var(--sh);padding:18px;}
+.card-t{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--gr);margin-bottom:12px;}
+.sh{margin:20px 0 12px;display:flex;justify-content:space-between;align-items:baseline;}
+.sh-l h3{font-size:14px;font-weight:700;}
+.sh-l p{font-size:11px;color:var(--gr);margin-top:2px;}
+
+/* PLATFORM NET-VIEW — two column */
+.net-view{display:none;}
+.net-view.show{display:block;}
+.nv-layout{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;margin-bottom:16px;}
+@media(max-width:900px){.nv-layout{grid-template-columns:1fr;}}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.kpi-box{background:var(--lg);border-radius:10px;padding:12px;}
+.kpi-box.main-kpi{background:var(--p);color:#fff;grid-column:1/-1;}
+.main-kpi .kv{font-size:34px;font-weight:800;color:#fff;line-height:1.1;}
+.main-kpi .kl{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:3px;}
+.kv{font-size:20px;font-weight:700;color:var(--txt);}
+.kl{font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--gr);}
+.kc{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:5px;}
+.kc.up{background:#D1FAE5;color:#065F46;}.kc.dn{background:#FEE2E2;color:#991B1B;}.kc.na{background:var(--lg);color:var(--gr);}
+
+/* INSIGHT BOXES */
+.ibox{border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.ibox.green{background:#F0FDF4;border-left:3px solid var(--g);}
+.ibox.amber{background:#FFFBEB;border-left:3px solid var(--a);}
+.ibox.red{background:#FFF5F5;border-left:3px solid var(--r);}
+.ibox.blue{background:#EFF6FF;border-left:3px solid var(--b);}
+.ibox.purple{background:#F5F3FF;border-left:3px solid var(--pm);}
+.ibox-t{font-size:8px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px;}
+.green .ibox-t{color:#065F46;}.amber .ibox-t{color:#92400E;}.red .ibox-t{color:#991B1B;}.blue .ibox-t{color:#1E40AF;}.purple .ibox-t{color:var(--pm);}
+.ibox p{font-size:12px;color:var(--txm);line-height:1.5;}
+.ibox p strong{color:var(--txt);}
+
+/* HBARS */
+.hb-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.hb-lbl{font-size:11px;color:var(--txm);width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hb-track{flex:1;height:16px;background:var(--lg);border-radius:8px;overflow:hidden;}
+.hb-fill{height:100%;border-radius:8px;transition:width .6s;}
+.hb-val{font-size:11px;font-weight:700;color:var(--txt);width:44px;text-align:right;flex-shrink:0;}
+
+/* FUNNEL */
+.funnel{display:flex;align-items:flex-end;gap:6px;justify-content:center;padding:8px 0;}
+.fn-step{text-align:center;flex:1;}
+.fn-bar-w{display:flex;justify-content:center;align-items:flex-end;height:90px;}
+.fn-bar{width:58%;border-radius:5px 5px 0 0;min-height:6px;}
+.fn-v{font-size:15px;font-weight:800;color:var(--txt);margin-top:5px;}
+.fn-l{font-size:8px;color:var(--gr);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.fn-arr{font-size:16px;color:var(--border);padding-bottom:42px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{background:var(--lg);padding:8px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--gr);border-bottom:1px solid var(--border);cursor:pointer;}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:11px;color:var(--txm);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#FAFAFE;}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:700;}
+.t-r{background:#EDE9FE;color:#6D28D9;}.t-f{background:#FEF3C7;color:#B45309;}
+.t-p{background:#E0F2FE;color:#075985;}.t-v{background:#DCFCE7;color:#15803D;}.t-s{background:#FFF7ED;color:#C2410C;}
+.rank{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--p);color:#fff;align-items:center;justify-content:center;font-size:8px;font-weight:700;}
+
+/* EDITOR PANEL */
+.editor-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;justify-content:flex-end;}
+.editor-overlay.open{display:flex;}
+.editor-panel{background:#fff;width:380px;height:100%;overflow-y:auto;padding:24px;box-shadow:-4px 0 20px rgba(0,0,0,.15);}
+.ep-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.ep-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gr);}
+.ep-net{margin-bottom:16px;}
+.ep-net h4{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--pm);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.ep-field{margin-bottom:8px;}
+.ep-field label{font-size:10px;color:var(--gr);display:block;margin-bottom:3px;}
+.ep-field input{width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px;color:var(--txt);}
+.ep-save{background:var(--p);color:#fff;border:none;width:100%;padding:10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;margin-top:12px;}
+
+/* JULY STRATEGY */
+.jul-hero{background:linear-gradient(135deg,var(--p),var(--pm));border-radius:14px;padding:24px;color:#fff;margin-bottom:20px;}
+.jul-hero h2{font-size:22px;font-weight:800;}
+.jul-hero p{font-size:13px;color:rgba(255,255,255,.65);margin-top:6px;}
+.jul-meta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.jul-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px;font-size:11px;color:#fff;}
+.jul-chip strong{display:block;font-size:16px;font-weight:800;margin-top:2px;}
+.jul-section{margin-bottom:24px;}
+.jul-section h3{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;}
+.content-card{background:#fff;border-radius:12px;border:1px solid var(--border);box-shadow:var(--sh);padding:16px;}
+.cc-week{font-size:9px;font-weight:700;letter-spacing:.8px;color:var(--b);text-transform:uppercase;margin-bottom:6px;}
+.cc-title{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:6px;}
+.cc-desc{font-size:11px;color:var(--gr);line-height:1.5;margin-bottom:8px;}
+.cc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.cc-tag{background:var(--lg);border-radius:10px;padding:2px 8px;font-size:9px;font-weight:600;color:var(--gr);}
+.cc-tag.ig{background:#FEF0F8;color:#833AB4;}
+.cc-tag.fb{background:#EFF6FF;color:#1877F2;}
+.cc-tag.tt{background:#F0F0F0;color:#111;}
+.cc-tag.li{background:#EBF5FF;color:#0A66C2;}
+.cc-tag.yt{background:#FEE2E2;color:#CC0000;}
+.pauta-card{background:#fff;border-radius:12px;border:2px solid var(--b);padding:18px;margin-bottom:12px;}
+.pc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.pc-platform{font-size:13px;font-weight:700;color:var(--txt);}
+.pc-budget{background:var(--b);color:#fff;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700;}
+.pc-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.pc-item{background:var(--lg);border-radius:8px;padding:10px;}
+.pc-item .pi-l{font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.pc-item .pi-v{font-size:12px;font-weight:600;color:var(--txt);line-height:1.4;}
+.goal-box{background:var(--pm);border-radius:10px;padding:14px;color:#fff;margin-top:12px;}
+.goal-box p{font-size:11px;color:rgba(255,255,255,.75);margin-top:3px;}
+.alert-box{background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:12px;margin-bottom:12px;font-size:12px;color:#92400E;line-height:1.5;}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.donut-leg{display:flex;flex-direction:column;gap:6px;flex:1;}
+.dleg-row{display:flex;align-items:center;gap:7px;font-size:11px;}
+.dleg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.demo-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.demo-followers{font-size:34px;font-weight:800;color:var(--txt);line-height:1;}
+.age-chart{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end;height:128px;border-bottom:1px solid var(--border);padding:0 6px 8px;margin-bottom:16px;}
+.age-col{text-align:center;}
+.age-bars{height:92px;display:flex;align-items:flex-end;justify-content:center;gap:3px;}
+.age-m,.age-f{width:15px;border-radius:4px 4px 0 0;min-height:2px;}
+.age-m{background:#9BD6F5;}
+.age-f{background:#3D94CF;}
+.age-lbl{font-size:9px;margin-top:6px;color:var(--gr);}
+.demo-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+@media(max-width:900px){.demo-split{grid-template-columns:1fr;}.age-chart{gap:6px;}}
+
+@media(max-width:768px){
+  .hero{padding:18px 14px 0;}
+  .hero-row{flex-direction:column;gap:12px;}
+  .hero-title h1{font-size:20px;}
+  .hero-chips{width:100%;}
+  .hero-chip{text-align:left;flex:1 1 110px;}
+  .hero-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .hs{padding:12px 10px;border-right:none;border-bottom:1px solid rgba(255,255,255,.08);}
+  .hs:nth-child(odd){border-right:1px solid rgba(255,255,255,.08);}
+  .hs:last-child{grid-column:1/-1;border-right:none;border-bottom:none;}
+  .hs .hv{font-size:20px;}
+  .ctrl{position:static;align-items:flex-start;}
+  .net-tabs{width:100%;}
+  .ntab{flex:1 1 calc(50% - 5px);justify-content:center;}
+  .ctrl-r{width:100%;margin-left:0;justify-content:space-between;}
+  .sh{align-items:flex-start;gap:8px;flex-direction:column;}
+  .kpi-grid{grid-template-columns:1fr;}
+  .pc-row{grid-template-columns:1fr;}
+  .pauta-card{padding:14px;}
+  .editor-panel{width:100%;max-width:420px;}
+  .pc-header{flex-direction:column;gap:8px;}
+  .strat-tabs{flex-direction:column;border-radius:12px;overflow:hidden;border-bottom:1px solid var(--border);}
+  .strat-content{border-radius:12px;margin-top:10px;padding:16px;}
+  #par-grid{grid-template-columns:1fr!important;}
+  .demo-head{align-items:flex-start;flex-direction:column;}
+  .demo-head > div:last-child{text-align:left!important;}
+}
+
+@media(max-width:420px){
+  .qtab-t{font-size:15px;}
+  .qtab-d{font-size:10px;max-width:calc(100% - 74px);}
+  .main{padding:10px;}
+  .card{padding:14px;}
+  .hb-lbl{width:96px;}
+  .hb-val{width:40px;}
+  .age-chart{gap:4px;padding-left:0;padding-right:0;}
+  .age-m,.age-f{width:12px;}
+}
+
+/* CHART CONTAINER — explicit height always */
+.ch-wrap{position:relative;}
+.ch-wrap canvas{max-height:100%;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- EDITOR PANEL -->
+<div class="editor-overlay" id="editorOverlay">
+  <div class="editor-panel">
+    <div class="ep-head">
+      <div><strong style="font-size:15px;">✏️ Editar métricas</strong><br><span style="font-size:11px;color:var(--gr);">Los cambios actualizan el dashboard</span></div>
+      <button class="ep-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div id="editorFields"></div>
+    <button class="ep-save" onclick="applyEdits()">Actualizar dashboard</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-row">
+    <div class="hero-title">
+      <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--bl);text-transform:uppercase;margin-bottom:4px;">Gestión Digital · Informe 02</div>
+      <h1>TKC Fumigaciones <span>Group</span></h1>
+      <p>Resultados de redes sociales · Mayo – Junio 2026</p>
+    </div>
+    <div class="hero-chips">
+      <div class="hero-chip"><div class="cl">Período</div><div class="cv">25 May – 25 Jun</div></div>
+      <div class="hero-chip"><div class="cl">Redes activas</div><div class="cv">5 canales</div></div>
+      <div class="hero-chip"><div class="cl">Comparativo vs</div><div class="cv">Línea base mayo</div></div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hl">Instagram · Visualizaciones</div><div class="hv" id="h-ig-vis">6,524</div><div class="hc up">▲ +127% vs mayo (2,874)</div></div>
+    <div class="hs"><div class="hl">Facebook · Visualizaciones</div><div class="hv" id="h-fb-vis">5,204</div><div class="hc up">▲ +175% vs mayo (1,894)</div></div>
+    <div class="hs"><div class="hl">TikTok · Vistas exactas</div><div class="hv" id="h-tt-vis">3,110</div><div class="hc up">▲ +354% vs mayo (683)</div></div>
+    <div class="hs"><div class="hl">YouTube · Visualizaciones</div><div class="hv" id="h-yt-vis">486</div><div class="hc dn">▼ -50% vs mayo (966*)</div></div>
+    <div class="hs"><div class="hl">LinkedIn · Impresiones</div><div class="hv" id="h-li-imp">984</div><div class="hc up">▲ +1,195% vs mayo (76)</div></div>
+  </div>
+</div>
+
+<!-- PRIMARY QUESTION NAV -->
+<div class="qnav">
+  <button class="qtab" data-view="parrilla" onclick="setView('parrilla',this)">
+    <div class="qtab-k">Contenido</div>
+    <div class="qtab-t">¿Qué publicamos en junio?</div>
+    <div class="qtab-d">Piezas publicadas, estado y aprendizajes.</div>
+  </button>
+  <button class="qtab active" data-view="general" onclick="setView('general',this)">
+    <div class="qtab-k">Resultados</div>
+    <div class="qtab-t">¿Cómo nos fue en junio?</div>
+    <div class="qtab-d">Cifras, redes, audiencia y desempeño.</div>
+  </button>
+  <button class="qtab" data-view="julio" onclick="setView('julio',this)">
+    <div class="qtab-k">Siguiente paso</div>
+    <div class="qtab-t">¿Cuál es la estrategia de julio?</div>
+    <div class="qtab-d">Ruta orgánica y opción con Meta Ads.</div>
+  </button>
+</div>
+
+<!-- CONTROLS -->
+<div class="ctrl" id="statsControls">
+  <div class="net-tabs">
+    <button class="ntab active all" onclick="setNet('all',this)"><span class="ndot" style="background:var(--p);"></span>Todas</button>
+    <button class="ntab fb" onclick="setNet('fb',this)"><span class="ndot" style="background:#1877F2;"></span>Facebook</button>
+    <button class="ntab ig" onclick="setNet('ig',this)"><span class="ndot" style="background:#E1306C;"></span>Instagram</button>
+    <button class="ntab tt" onclick="setNet('tt',this)"><span class="ndot" style="background:#111;"></span>TikTok</button>
+    <button class="ntab yt" onclick="setNet('yt',this)"><span class="ndot" style="background:#CC0000;"></span>YouTube</button>
+    <button class="ntab li" onclick="setNet('li',this)"><span class="ndot" style="background:#0A66C2;"></span>LinkedIn</button>
+  </div>
+  <div class="ctrl-r">
+    <label class="tgl-wrap" onclick="toggleComp()">Comparativo mayo <div class="tgl on" id="compTgl"></div></label>
+    <button class="edit-btn" id="adminEditBtn" onclick="openEditor()" style="display:none;">Editar cifras</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ═══════════════ VISTA GENERAL ═══════════════ -->
+<div id="v-general">
+
+  <!-- OVERVIEW ALL NETWORKS -->
+  <div id="nv-all">
+    <div class="sh"><div class="sh-l"><h3>Rendimiento por canal</h3><p>Junio 2026 · vs línea base mayo (14–24 may, 11 días)</p></div></div>
+    <div class="g5">
+      <!-- FB -->
+      <div class="card" style="border-top:3px solid #1877F2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:13px;">📘 Facebook</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;" id="s-fb-vis">5,204</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;">Visualizaciones</div>
+        <div class="kc up comp-el">▲ +175% vs 1,894</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <div class="kpi-box"><div class="kl">Interacciones</div><div class="kv" id="s-fb-int">258</div><div class="kc up comp-el" style="font-size:9px;">+190%</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seg.</div><div class="kv" id="s-fb-seg">+5</div><div class="kc up comp-el" style="font-size:9px;">+67%</div></div>
+          <div class="kpi-box"><div class="kl">Espectadores</div><div class="kv" id="s-fb-esp">2,014</div></div>
+          <div class="kpi-box"><div class="kl">Total comunidad</div><div class="kv" id="s-fb-tot">292</div></div>
+        </div>
+      </div>
+      <!-- IG -->
+      <div class="card" style="border-top:3px solid #E1306C;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:13px;">📸 Instagram</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;" id="s-ig-vis">6,524</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;">Visualizaciones</div>
+        <div class="kc up comp-el">▲ +127% vs 2,874</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <div class="kpi-box"><div class="kl">Interacciones</div><div class="kv" id="s-ig-int">537</div><div class="kc up comp-el" style="font-size:9px;">+172%</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seg.</div><div class="kv" id="s-ig-seg">+8</div><div class="kc dn comp-el" style="font-size:9px;">−62%</div></div>
+          <div class="kpi-box"><div class="kl">Alcance</div><div class="kv" id="s-ig-alc">~1.2K</div></div>
+          <div class="kpi-box"><div class="kl">Vistas hist.</div><div class="kv">994</div></div>
+        </div>
+      </div>
+      <!-- TT -->
+      <div class="card" style="border-top:3px solid #111;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:13px;">🎵 TikTok</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;" id="s-tt-vis">3,110</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;">Vistas totales (XLS exacto)</div>
+        <div class="kc up comp-el">▲ +354% vs 683</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <div class="kpi-box"><div class="kl">Me gusta</div><div class="kv" id="s-tt-mg">133</div><div class="kc up comp-el" style="font-size:9px;">+329%</div></div>
+          <div class="kpi-box"><div class="kl">Compartidos</div><div class="kv" id="s-tt-sh">20</div></div>
+          <div class="kpi-box"><div class="kl">Vistas perfil</div><div class="kv">60</div></div>
+          <div class="kpi-box"><div class="kl">Total seg.</div><div class="kv">38</div></div>
+        </div>
+      </div>
+      <!-- YT -->
+      <div class="card" style="border-top:3px solid #CC0000;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:13px;">▶️ YouTube</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;" id="s-yt-vis">486</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;">Visualizaciones jun</div>
+        <div class="kc dn comp-el">▼ -50% vs mayo (966*)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <div class="kpi-box"><div class="kl">Nuevos subs.</div><div class="kv">+4</div></div>
+          <div class="kpi-box"><div class="kl">CTR</div><div class="kv">3.1%</div></div>
+          <div class="kpi-box"><div class="kl">Tiempo visto</div><div class="kv">1.0 h</div></div>
+          <div class="kpi-box"><div class="kl">Vía Shorts</div><div class="kv">96%</div></div>
+        </div>
+      </div>
+      <!-- LI -->
+      <div class="card" style="border-top:3px solid #0A66C2;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:13px;">💼 LinkedIn</span>
+        </div>
+        <div style="font-size:28px;font-weight:800;" id="s-li-imp">984</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;">Impresiones</div>
+        <div class="kc up comp-el">▲ +1,195% vs mayo (76)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <div class="kpi-box"><div class="kl">Clics</div><div class="kv" id="s-li-cli">214</div></div>
+          <div class="kpi-box"><div class="kl">CTR calc.</div><div class="kv">21.7%</div></div>
+          <div class="kpi-box"><div class="kl">Interac. calc.</div><div class="kv">246</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seg.</div><div class="kv">+4</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON CHART + FUNNEL -->
+    <div class="g2" style="margin-top:16px;">
+      <div class="card comp-el">
+        <div class="card-t">📊 Mayo vs. Junio · datos reales</div>
+        <div style="font-size:10px;color:var(--gr);margin-bottom:10px;">Mayo = 14–24 may (11 días activos). Junio = 25 may–25 jun (31 días). Períodos distintos.</div>
+        <div class="ch-wrap" style="height:220px;"><canvas id="c-comp"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-t">🔽 Embudo de conversión · IG + FB junio</div>
+        <div class="funnel">
+          <div class="fn-step"><div class="fn-bar-w"><div class="fn-bar" style="height:100%;background:var(--p);"></div></div><div class="fn-v">11,728</div><div class="fn-l">Visualizaciones</div></div>
+          <div class="fn-arr">›</div>
+          <div class="fn-step"><div class="fn-bar-w"><div class="fn-bar" style="height:55%;background:var(--pm);"></div></div><div class="fn-v">~3,200</div><div class="fn-l">Espectadores</div></div>
+          <div class="fn-arr">›</div>
+          <div class="fn-step"><div class="fn-bar-w"><div class="fn-bar" style="height:28%;background:var(--b);"></div></div><div class="fn-v">795</div><div class="fn-l">Interacciones</div></div>
+          <div class="fn-arr">›</div>
+          <div class="fn-step"><div class="fn-bar-w"><div class="fn-bar" style="height:4%;background:var(--a);min-height:5px;"></div></div><div class="fn-v">3</div><div class="fn-l">Clics enlace</div></div>
+          <div class="fn-arr">›</div>
+          <div class="fn-step"><div class="fn-bar-w"><div class="fn-bar" style="height:1%;background:var(--r);min-height:4px;"></div></div><div class="fn-v">0</div><div class="fn-l">Leads doc.</div></div>
+        </div>
+        <div class="ibox amber" style="margin-top:10px;"><div class="ibox-t">⚠ Quiebre del embudo</div><p>Se tuvieron CTAs activos (palabras clave, contáctenos, comentarios). El reto está en convertir atención en conversación: la base orgánica crece, pero necesita seguimiento comercial y llamados a WhatsApp más visibles.</p></div>
+      </div>
+    </div>
+
+    <!-- HALLAZGOS -->
+    <div class="sh"><div class="sh-l"><h3>💡 Hallazgos del periodo</h3></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;">
+      <div class="ibox green"><div class="ibox-t">✅ Victoria</div><p>IG y FB <strong>duplicaron o triplicaron</strong> todas sus métricas vs. la línea base de mayo.</p></div>
+      <div class="ibox green"><div class="ibox-t">✅ Desempeño</div><p>LinkedIn: CTR del <strong>21.7%</strong>, excepcional para B2B orgánico. TikTok: +354% en vistas con datos exactos.</p></div>
+      <div class="ibox amber"><div class="ibox-t">⚠ Nuevos seguidores IG</div><p>Cayeron un <strong>−62%</strong>. El contenido viraliza pero no está reteniendo nuevo seguidor.</p></div>
+      <div class="ibox red"><div class="ibox-t">🔴 Punto a trabajar</div><p>La audiencia orgánica todavía es pequeña para exigir leads constantes. Se puede seguir creciendo orgánicamente y, si hay presupuesto, probar Meta Ads como acelerador controlado.</p></div>
+      <div class="ibox blue"><div class="ibox-t">📌 TikTok</div><p>"Hoy juega Colombia" alcanzó <strong>6,419 vistas</strong> en 2 días (snapshot fuera del período). Señal de alto potencial viral.</p></div>
+      <div class="ibox purple"><div class="ibox-t">📌 YouTube</div><p>96% del tráfico viene del <strong>feed de Shorts</strong>. Canal de descubrimiento activo para usuarios nuevos (90.7%).</p></div>
+    </div>
+
+    <div class="sh"><div class="sh-l"><h3>Audiencias Meta · Facebook e Instagram</h3><p>Lectura demográfica por red para entender a quién le estamos hablando y dónde hay oportunidad de conversación.</p></div></div>
+    <div class="g2">
+      <div class="card" style="border-top:3px solid #1877F2;">
+        <div class="card-t">Facebook · Datos demográficos</div>
+        <div class="demo-head">
+          <div><div style="font-size:10px;color:var(--gr);font-weight:700;text-transform:uppercase;letter-spacing:.7px;">Seguidores</div><div class="demo-followers">292</div></div>
+          <div style="text-align:right;font-size:11px;color:var(--gr);">Hombres <strong style="color:var(--txt);">68.9%</strong><br>Mujeres <strong style="color:var(--txt);">31.1%</strong></div>
+        </div>
+        <div class="card-t">Edad y sexo</div>
+        <div class="age-chart">
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:2px;"></div><div class="age-f" style="height:3px;"></div></div><div class="age-lbl">18-24</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:65px;"></div><div class="age-f" style="height:42px;"></div></div><div class="age-lbl">25-34</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:92px;"></div><div class="age-f" style="height:44px;"></div></div><div class="age-lbl">35-44</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:62px;"></div><div class="age-f" style="height:24px;"></div></div><div class="age-lbl">45-54</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:29px;"></div><div class="age-f" style="height:10px;"></div></div><div class="age-lbl">55-64</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:19px;"></div><div class="age-f" style="height:6px;"></div></div><div class="age-lbl">65+</div></div>
+        </div>
+        <div class="demo-split">
+          <div><div class="card-t">Principales ciudades</div>
+            <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:38.4%;background:#008B8B;"></div></div><div class="hb-val">38.4%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Cali</div><div class="hb-track"><div class="hb-fill" style="width:5.5%;background:#008B8B;"></div></div><div class="hb-val">5.5%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Medellín</div><div class="hb-track"><div class="hb-fill" style="width:4.1%;background:#008B8B;"></div></div><div class="hb-val">4.1%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Garagoa</div><div class="hb-track"><div class="hb-fill" style="width:2.1%;background:#008B8B;"></div></div><div class="hb-val">2.1%</div></div>
+          </div>
+          <div><div class="card-t">Principales países</div>
+            <div class="hb-row"><div class="hb-lbl">Colombia</div><div class="hb-track"><div class="hb-fill" style="width:87.3%;background:#008B8B;"></div></div><div class="hb-val">87.3%</div></div>
+            <div class="hb-row"><div class="hb-lbl">México</div><div class="hb-track"><div class="hb-fill" style="width:4.8%;background:#008B8B;"></div></div><div class="hb-val">4.8%</div></div>
+            <div class="hb-row"><div class="hb-lbl">EE. UU.</div><div class="hb-track"><div class="hb-fill" style="width:2.4%;background:#008B8B;"></div></div><div class="hb-val">2.4%</div></div>
+            <div class="hb-row"><div class="hb-lbl">España</div><div class="hb-track"><div class="hb-fill" style="width:1.7%;background:#008B8B;"></div></div><div class="hb-val">1.7%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-top:3px solid #E1306C;">
+        <div class="card-t">Instagram · Datos demográficos</div>
+        <div class="demo-head">
+          <div><div style="font-size:10px;color:var(--gr);font-weight:700;text-transform:uppercase;letter-spacing:.7px;">Seguidores</div><div class="demo-followers">416</div></div>
+          <div style="text-align:right;font-size:11px;color:var(--gr);">Hombres <strong style="color:var(--txt);">70%</strong><br>Mujeres <strong style="color:var(--txt);">30%</strong></div>
+        </div>
+        <div class="card-t">Edad y sexo</div>
+        <div class="age-chart">
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:4px;"></div><div class="age-f" style="height:8px;"></div></div><div class="age-lbl">18-24</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:70px;"></div><div class="age-f" style="height:45px;"></div></div><div class="age-lbl">25-34</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:88px;"></div><div class="age-f" style="height:40px;"></div></div><div class="age-lbl">35-44</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:70px;"></div><div class="age-f" style="height:20px;"></div></div><div class="age-lbl">45-54</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:34px;"></div><div class="age-f" style="height:8px;"></div></div><div class="age-lbl">55-64</div></div>
+          <div class="age-col"><div class="age-bars"><div class="age-m" style="height:17px;"></div><div class="age-f" style="height:2px;"></div></div><div class="age-lbl">65+</div></div>
+        </div>
+        <div class="demo-split">
+          <div><div class="card-t">Principales ciudades</div>
+            <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:27.2%;background:#008B8B;"></div></div><div class="hb-val">27.2%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Medellín</div><div class="hb-track"><div class="hb-fill" style="width:3.4%;background:#008B8B;"></div></div><div class="hb-val">3.4%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Buenos Aires</div><div class="hb-track"><div class="hb-fill" style="width:2.9%;background:#008B8B;"></div></div><div class="hb-val">2.9%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Santiago</div><div class="hb-track"><div class="hb-fill" style="width:2.6%;background:#008B8B;"></div></div><div class="hb-val">2.6%</div></div>
+          </div>
+          <div><div class="card-t">Principales países</div>
+            <div class="hb-row"><div class="hb-lbl">Colombia</div><div class="hb-track"><div class="hb-fill" style="width:54.6%;background:#008B8B;"></div></div><div class="hb-val">54.6%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Argentina</div><div class="hb-track"><div class="hb-fill" style="width:16.1%;background:#008B8B;"></div></div><div class="hb-val">16.1%</div></div>
+            <div class="hb-row"><div class="hb-lbl">México</div><div class="hb-track"><div class="hb-fill" style="width:4.3%;background:#008B8B;"></div></div><div class="hb-val">4.3%</div></div>
+            <div class="hb-row"><div class="hb-lbl">Venezuela</div><div class="hb-track"><div class="hb-fill" style="width:4.3%;background:#008B8B;"></div></div><div class="hb-val">4.3%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g3" style="margin-top:16px;">
+      <div class="card" style="border-top:3px solid #111;">
+        <div class="card-t">TikTok · Espectadores</div>
+        <div style="font-size:30px;font-weight:800;color:var(--txt);line-height:1;">~1.9K</div>
+        <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">Espectadores únicos últimos 28 días</div>
+        <div class="hb-row"><div class="hb-lbl">Mujeres</div><div class="hb-track"><div class="hb-fill" style="width:54%;background:#EC4899;"></div></div><div class="hb-val">54%</div></div>
+        <div class="hb-row"><div class="hb-lbl">Hombres</div><div class="hb-track"><div class="hb-fill" style="width:46%;background:#111;"></div></div><div class="hb-val">46%</div></div>
+        <div class="hb-row"><div class="hb-lbl">25-34</div><div class="hb-track"><div class="hb-fill" style="width:41.2%;background:#444;"></div></div><div class="hb-val">41.2%</div></div>
+      </div>
+      <div class="card" style="border-top:3px solid #0A66C2;">
+        <div class="card-t">LinkedIn · Seguidores B2B</div>
+        <div class="hb-row"><div class="hb-lbl">Operaciones</div><div class="hb-track"><div class="hb-fill" style="width:100%;background:#0A66C2;"></div></div><div class="hb-val">105</div></div>
+        <div class="hb-row"><div class="hb-lbl">Des. empresarial</div><div class="hb-track"><div class="hb-fill" style="width:30%;background:#0A66C2;"></div></div><div class="hb-val">32</div></div>
+        <div class="hb-row"><div class="hb-lbl">Contabilidad</div><div class="hb-track"><div class="hb-fill" style="width:27%;background:#0A66C2;"></div></div><div class="hb-val">28</div></div>
+        <div class="ibox blue" style="margin-top:10px;"><div class="ibox-t">Insight B2B</div><p>Operaciones y desarrollo empresarial concentran audiencia útil para conversaciones corporativas.</p></div>
+      </div>
+      <div class="card" style="border-top:3px solid #CC0000;">
+        <div class="card-t">YouTube · Descubrimiento</div>
+        <div class="hb-row"><div class="hb-lbl">Usuarios nuevos</div><div class="hb-track"><div class="hb-fill" style="width:90.7%;background:#CC0000;"></div></div><div class="hb-val">90.7%</div></div>
+        <div class="hb-row"><div class="hb-lbl">Shorts feed</div><div class="hb-track"><div class="hb-fill" style="width:76.5%;background:#CC0000;"></div></div><div class="hb-val">76.5%</div></div>
+        <div class="hb-row"><div class="hb-lbl">Móvil</div><div class="hb-track"><div class="hb-fill" style="width:70.1%;background:#FF6B6B;"></div></div><div class="hb-val">70.1%</div></div>
+      </div>
+    </div>
+  </div><!-- /nv-all -->
+
+  <!-- ─── FACEBOOK ─── -->
+  <div class="net-view" id="nv-fb">
+    <div class="sh"><div class="sh-l"><h3>📘 Facebook</h3><p>25 mayo – 25 junio 2026 · vs línea base 14–24 mayo</p></div></div>
+    <div class="nv-layout">
+      <div>
+        <div class="kpi-grid">
+          <div class="kpi-box main-kpi"><div class="kl">Visualizaciones</div><div class="kv">5,204</div><div class="kc up comp-el" style="margin-top:4px;">▲ +175% vs mayo (1,894)</div></div>
+          <div class="kpi-box"><div class="kl">Espectadores</div><div class="kv">2,014</div><div class="kc up comp-el">▲ +178% vs 724</div></div>
+          <div class="kpi-box"><div class="kl">Interacciones</div><div class="kv">258</div><div class="kc up comp-el">▲ +190% vs 89</div></div>
+          <div class="kpi-box"><div class="kl">Clics en enlace</div><div class="kv">3</div><div class="kc up comp-el">▲ +200% vs 1</div></div>
+          <div class="kpi-box"><div class="kl">Visitas a página</div><div class="kv">243</div><div class="kc up comp-el">▲ +33%</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seguidores</div><div class="kv">+5</div><div class="kc up comp-el">▲ +67% vs +3</div></div>
+          <div class="kpi-box"><div class="kl">Total comunidad</div><div class="kv">292</div></div>
+          <div class="kpi-box" style="background:#F0FDF4;"><div class="kl" style="color:#065F46;">Benchmark cat.</div><div class="kv" style="color:#065F46;">Superior</div><div style="font-size:9px;color:#065F46;margin-top:2px;">258 vs ref. 74</div></div>
+        </div>
+        <div class="ibox amber" style="margin-top:12px;"><div class="ibox-t">⚠ Conversión</div><p>Solo 3 clics en enlace de 5,204 visualizaciones (0.06%). La audiencia ve pero no visita el link.</p></div>
+      </div>
+      <div class="card">
+        <div class="card-t comp-el">Comparativo Mayo vs. Junio</div>
+        <div class="ch-wrap comp-el" style="height:200px;"><canvas id="c-fb-comp"></canvas></div>
+        <div style="margin-top:14px;"><div class="card-t">Visualizaciones por formato</div><div class="ch-wrap" style="height:160px;"><canvas id="c-fb-fmt"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #1877F2;">
+      <div class="card-t">Facebook · Audiencia</div>
+      <div class="demo-head">
+        <div><div style="font-size:10px;color:var(--gr);font-weight:700;text-transform:uppercase;letter-spacing:.7px;">Seguidores</div><div class="demo-followers">292</div></div>
+        <div style="text-align:right;font-size:11px;color:var(--gr);">Hombres <strong style="color:var(--txt);">68.9%</strong><br>Mujeres <strong style="color:var(--txt);">31.1%</strong></div>
+      </div>
+      <div class="demo-split">
+        <div><div class="card-t">Principales ciudades</div>
+          <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:38.4%;background:#1877F2;"></div></div><div class="hb-val">38.4%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Cali</div><div class="hb-track"><div class="hb-fill" style="width:5.5%;background:#1877F2;"></div></div><div class="hb-val">5.5%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Medellín</div><div class="hb-track"><div class="hb-fill" style="width:4.1%;background:#1877F2;"></div></div><div class="hb-val">4.1%</div></div>
+        </div>
+        <div><div class="card-t">Principales países</div>
+          <div class="hb-row"><div class="hb-lbl">Colombia</div><div class="hb-track"><div class="hb-fill" style="width:87.3%;background:#008B8B;"></div></div><div class="hb-val">87.3%</div></div>
+          <div class="hb-row"><div class="hb-lbl">México</div><div class="hb-track"><div class="hb-fill" style="width:4.8%;background:#008B8B;"></div></div><div class="hb-val">4.8%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Estados Unidos</div><div class="hb-track"><div class="hb-fill" style="width:2.4%;background:#008B8B;"></div></div><div class="hb-val">2.4%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── INSTAGRAM ─── -->
+  <div class="net-view" id="nv-ig">
+    <div class="sh"><div class="sh-l"><h3>📸 Instagram</h3><p>25 mayo – 25 junio 2026 · vs línea base 14–24 mayo</p></div></div>
+    <div class="nv-layout">
+      <div>
+        <div class="kpi-grid">
+          <div class="kpi-box main-kpi" style="background:linear-gradient(135deg,#833AB4,#E1306C);"><div class="kl">Visualizaciones</div><div class="kv">6,524</div><div class="kc up comp-el" style="margin-top:4px;background:rgba(255,255,255,.2);color:#fff;">▲ +127% vs mayo (2,874)</div></div>
+          <div class="kpi-box"><div class="kl">Alcance</div><div class="kv">~1,200</div><div class="kc up comp-el">▲ +61% vs 744</div></div>
+          <div class="kpi-box"><div class="kl">Interacciones</div><div class="kv">537</div><div class="kc up comp-el">▲ +172% vs 197</div></div>
+          <div class="kpi-box"><div class="kl">Publicaciones</div><div class="kv">24</div><div class="kc up comp-el">▲ +246%</div></div>
+          <div class="kpi-box"><div class="kl">Vistas historias</div><div class="kv">994</div><div class="kc up comp-el">▲ +23%</div></div>
+          <div class="kpi-box"><div class="kl">Alcance historias</div><div class="kv">127</div><div class="kc dn comp-el">▼ −61%</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seguidores</div><div class="kv">+8</div><div class="kc dn comp-el">▼ −62% vs +21</div></div>
+          <div class="kpi-box"><div class="kl">Clics en enlace</div><div class="kv">0</div></div>
+        </div>
+        <div class="ibox red" style="margin-top:12px;"><div class="ibox-t">🔴 Alerta</div><p>Nuevos seguidores cayeron −62%. Con 0 clics en enlace documentados, el contenido no está llevando al perfil.</p></div>
+      </div>
+      <div class="card">
+        <div class="card-t comp-el">Comparativo Mayo vs. Junio</div>
+        <div class="ch-wrap comp-el" style="height:200px;"><canvas id="c-ig-comp"></canvas></div>
+        <div style="margin-top:14px;"><div class="card-t">Formato ganador: Reels &gt; Fotos</div>
+        <div class="ibox blue" style="margin-top:8px;"><div class="ibox-t">📐 Sin etiquetas exactas</div><p>Meta no entrega valores numéricos por formato para este período. Lectura cualitativa: Reels lideran en interacciones y alcance.</p></div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #E1306C;">
+      <div class="card-t">Instagram · Audiencia</div>
+      <div class="demo-head">
+        <div><div style="font-size:10px;color:var(--gr);font-weight:700;text-transform:uppercase;letter-spacing:.7px;">Seguidores</div><div class="demo-followers">416</div></div>
+        <div style="text-align:right;font-size:11px;color:var(--gr);">Hombres <strong style="color:var(--txt);">70%</strong><br>Mujeres <strong style="color:var(--txt);">30%</strong></div>
+      </div>
+      <div class="demo-split">
+        <div><div class="card-t">Principales ciudades</div>
+          <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:27.2%;background:#E1306C;"></div></div><div class="hb-val">27.2%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Medellín</div><div class="hb-track"><div class="hb-fill" style="width:3.4%;background:#E1306C;"></div></div><div class="hb-val">3.4%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Buenos Aires</div><div class="hb-track"><div class="hb-fill" style="width:2.9%;background:#E1306C;"></div></div><div class="hb-val">2.9%</div></div>
+        </div>
+        <div><div class="card-t">Principales países</div>
+          <div class="hb-row"><div class="hb-lbl">Colombia</div><div class="hb-track"><div class="hb-fill" style="width:54.6%;background:#008B8B;"></div></div><div class="hb-val">54.6%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Argentina</div><div class="hb-track"><div class="hb-fill" style="width:16.1%;background:#008B8B;"></div></div><div class="hb-val">16.1%</div></div>
+          <div class="hb-row"><div class="hb-lbl">México</div><div class="hb-track"><div class="hb-fill" style="width:4.3%;background:#008B8B;"></div></div><div class="hb-val">4.3%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TIKTOK ─── -->
+  <div class="net-view" id="nv-tt">
+    <div class="sh"><div class="sh-l"><h3>🎵 TikTok</h3><p>25 mayo – 24 junio 2026 · Datos exactos desde exportación XLS</p></div></div>
+    <div class="nv-layout">
+      <div>
+        <div class="kpi-grid">
+          <div class="kpi-box main-kpi" style="background:#111;"><div class="kl">Vistas de video (exactas)</div><div class="kv">3,110</div><div class="kc up comp-el" style="margin-top:4px;background:rgba(255,255,255,.15);color:#fff;">▲ +354% vs mayo (683)</div></div>
+          <div class="kpi-box"><div class="kl">Me gusta</div><div class="kv">133</div><div class="kc up comp-el">▲ +329% vs 31</div></div>
+          <div class="kpi-box"><div class="kl">Compartidos</div><div class="kv">20</div><div class="kc up comp-el">▲ +122% vs 9</div></div>
+          <div class="kpi-box"><div class="kl">Vistas de perfil</div><div class="kv">60</div><div class="kc up comp-el">▲ +150%</div></div>
+          <div class="kpi-box"><div class="kl">Seguidores totales</div><div class="kv">38</div></div>
+          <div class="kpi-box"><div class="kl">Seg. netos (período)</div><div class="kv">+19</div><div class="kc up comp-el">▲ +5.6%</div></div>
+        </div>
+        <div class="ibox amber" style="margin-top:12px;"><div class="ibox-t">⚠ Snapshot viral</div><p><strong>"Hoy juega Colombia"</strong>: 6,419 vistas en ~2 días (publicado 23 jun). Este dato supera el total del período porque se capturó después del corte. No se suma al total.</p></div>
+        <div class="ibox blue" style="margin-top:8px;"><div class="ibox-t">📌 Fuentes de tráfico</div><p>85.2% viene del FYP (Para Ti). Búsquedas activas: "fumigación Bogotá", "servicios de fumigación". Señal: el contenido ya aparece en búsquedas orgánicas.</p></div>
+      </div>
+      <div class="card">
+        <div class="card-t comp-el">Vistas diarias Mayo vs Junio (datos exactos)</div>
+        <div class="ch-wrap comp-el" style="height:220px;"><canvas id="c-tt-daily"></canvas></div>
+        <div style="margin-top:14px;"><div class="card-t">Top videos por vistas totales</div>
+        <div style="margin-top:8px;" id="tt-top-videos"></div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #111;">
+      <div class="card-t">TikTok · Audiencia y descubrimiento</div>
+      <div class="g3">
+        <div>
+          <div style="font-size:30px;font-weight:800;color:var(--txt);line-height:1;">~1.9K</div>
+          <div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.8px;">Espectadores únicos</div>
+        </div>
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Mujeres</div><div class="hb-track"><div class="hb-fill" style="width:54%;background:#EC4899;"></div></div><div class="hb-val">54%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Hombres</div><div class="hb-track"><div class="hb-fill" style="width:46%;background:#111;"></div></div><div class="hb-val">46%</div></div>
+        </div>
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Para Ti</div><div class="hb-track"><div class="hb-fill" style="width:85.2%;background:#111;"></div></div><div class="hb-val">85.2%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Búsqueda</div><div class="hb-track"><div class="hb-fill" style="width:7%;background:#777;"></div></div><div class="hb-val">7%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── YOUTUBE ─── -->
+  <div class="net-view" id="nv-yt">
+    <div class="sh"><div class="sh-l"><h3>▶️ YouTube</h3><p>Junio: 25 may – 24 jun 2026 · Mayo: 6–31 may 2026 (períodos distintos)</p></div></div>
+    <div class="nv-layout">
+      <div>
+        <div class="kpi-grid">
+          <div class="kpi-box main-kpi" style="background:#CC0000;"><div class="kl">Visualizaciones junio</div><div class="kv">486</div><div class="kc dn comp-el" style="margin-top:4px;background:rgba(255,255,255,.15);color:#fff;">▼ -50% vs mayo (966*)</div></div>
+          <div class="kpi-box"><div class="kl">Tiempo visto junio</div><div class="kv">1.0 h</div><div class="kc na comp-el">Mayo: 1.9 h</div></div>
+          <div class="kpi-box"><div class="kl">Suscriptores nuevos</div><div class="kv">+4</div><div class="kc na comp-el">Mayo: +12</div></div>
+          <div class="kpi-box"><div class="kl">CTR impresiones</div><div class="kv">3.1%</div></div>
+          <div class="kpi-box"><div class="kl">Impresiones</div><div class="kv">546</div></div>
+          <div class="kpi-box"><div class="kl">Suscriptores totales</div><div class="kv">16</div><div style="font-size:9px;color:var(--gr);margin-top:2px;">snapshot</div></div>
+          <div class="kpi-box"><div class="kl">Vía Shorts</div><div class="kv">96.1%</div></div>
+          <div class="kpi-box"><div class="kl">Dur. media vista</div><div class="kv">0:23</div></div>
+        </div>
+        <div class="ibox amber" style="margin-top:12px;"><div class="ibox-t">⚠ Comparativo con cautela</div><p>YouTube se ve por debajo de mayo en visualizaciones. El período de mayo (6–31 may, 25 días) incluye publicaciones anteriores al corte de junio, así que la lectura debe hacerse con contexto: hay baja visible, pero no es un período exactamente equivalente.</p></div>
+      </div>
+      <div class="card">
+        <div class="card-t comp-el">Mayo vs. Junio (datos reportados)</div>
+        <div class="ch-wrap comp-el" style="height:180px;"><canvas id="c-yt-comp"></canvas></div>
+        <div style="margin-top:14px;"><div class="card-t">Fuentes de tráfico junio</div><div class="ch-wrap" style="height:160px;"><canvas id="c-yt-traffic"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #CC0000;">
+      <div class="card-t">YouTube · Audiencia y dispositivos</div>
+      <div class="g3">
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Usuarios nuevos</div><div class="hb-track"><div class="hb-fill" style="width:90.7%;background:#CC0000;"></div></div><div class="hb-val">90.7%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Ocasionales</div><div class="hb-track"><div class="hb-fill" style="width:9.3%;background:#FF6B6B;"></div></div><div class="hb-val">9.3%</div></div>
+        </div>
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Feed Shorts</div><div class="hb-track"><div class="hb-fill" style="width:76.5%;background:#CC0000;"></div></div><div class="hb-val">76.5%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Canal</div><div class="hb-track"><div class="hb-fill" style="width:10.3%;background:#FF6B6B;"></div></div><div class="hb-val">10.3%</div></div>
+        </div>
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Móvil</div><div class="hb-track"><div class="hb-fill" style="width:70.1%;background:#CC0000;"></div></div><div class="hb-val">70.1%</div></div>
+          <div class="hb-row"><div class="hb-lbl">Ordenador</div><div class="hb-track"><div class="hb-fill" style="width:26.3%;background:#FF6B6B;"></div></div><div class="hb-val">26.3%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LINKEDIN ─── -->
+  <div class="net-view" id="nv-li">
+    <div class="sh"><div class="sh-l"><h3>💼 LinkedIn</h3><p>25 mayo – 23 junio 2026 · Serie diaria exacta desde XLS · Sin comparativo oficial previo</p></div></div>
+    <div class="nv-layout">
+      <div>
+        <div class="kpi-grid">
+          <div class="kpi-box main-kpi" style="background:#0A66C2;"><div class="kl">Impresiones totales</div><div class="kv">984</div><div class="kc up comp-el" style="margin-top:4px;background:rgba(255,255,255,.2);color:#fff;">▲ +1,195% vs mayo (76)</div></div>
+          <div class="kpi-box"><div class="kl">Clics totales</div><div class="kv">214</div><div class="kc up comp-el">▲ vs mayo (4)</div></div>
+          <div class="kpi-box"><div class="kl">CTR calculado</div><div class="kv">21.7%</div><div style="font-size:9px;color:var(--gr);margin-top:2px;">Calculado*</div></div>
+          <div class="kpi-box"><div class="kl">Recomendaciones</div><div class="kv">30</div></div>
+          <div class="kpi-box"><div class="kl">Compartidos</div><div class="kv">2</div></div>
+          <div class="kpi-box"><div class="kl">Interac. calculadas</div><div class="kv">246</div><div style="font-size:9px;color:var(--gr);margin-top:2px;">Calculado*</div></div>
+          <div class="kpi-box"><div class="kl">Nuevos seguidores</div><div class="kv">+4</div></div>
+          <div class="kpi-box"><div class="kl">Visitas a página</div><div class="kv">33</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-t">Tendencia diaria de impresiones y clics (datos exactos XLS)</div>
+        <div class="ch-wrap" style="height:200px;"><canvas id="c-li-daily"></canvas></div>
+        <div style="font-size:10px;color:var(--gr);margin-top:6px;">*CTR e interacciones son métricas calculadas, no nativas de LinkedIn.</div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #0A66C2;">
+      <div class="card-t">LinkedIn · Audiencia profesional</div>
+      <div class="g3">
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Operaciones</div><div class="hb-track"><div class="hb-fill" style="width:100%;background:#0A66C2;"></div></div><div class="hb-val">105</div></div>
+          <div class="hb-row"><div class="hb-lbl">Des. empresarial</div><div class="hb-track"><div class="hb-fill" style="width:30%;background:#0A66C2;"></div></div><div class="hb-val">32</div></div>
+          <div class="hb-row"><div class="hb-lbl">Contabilidad</div><div class="hb-track"><div class="hb-fill" style="width:27%;background:#0A66C2;"></div></div><div class="hb-val">28</div></div>
+        </div>
+        <div>
+          <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:100%;background:#0A66C2;"></div></div><div class="hb-val">334</div></div>
+          <div class="hb-row"><div class="hb-lbl">Lima</div><div class="hb-track"><div class="hb-fill" style="width:2%;background:#0A66C2;"></div></div><div class="hb-val">7</div></div>
+          <div class="hb-row"><div class="hb-lbl">Barranquilla</div><div class="hb-track"><div class="hb-fill" style="width:2%;background:#0A66C2;"></div></div><div class="hb-val">7</div></div>
+        </div>
+        <div class="ibox blue" style="margin:0;"><div class="ibox-t">Lectura</div><p>LinkedIn concentra una audiencia más corporativa. Funciona mejor para autoridad, casos, cobertura y señales de confianza B2B.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /v-general -->
+
+<!-- ═══════════════ VISTA CONTENIDO ═══════════════ -->
+<div id="v-contenido" style="display:none;">
+  <div class="sh">
+    <div class="sh-l"><h3>🏆 Top contenidos · Junio 2026</h3><p>Ordenado por visualizaciones · Datos exactos de XLS donde disponibles</p></div>
+    <div style="display:flex;gap:8px;">
+      <select id="cnt-filter" onchange="filterContent()" style="border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;background:#fff;">
+        <option value="all">Todas las redes</option>
+        <option value="fb">Facebook</option><option value="ig">Instagram</option>
+        <option value="tt">TikTok</option><option value="yt">YouTube</option><option value="li">LinkedIn</option>
+      </select>
+      <button onclick="exportCSV()" style="background:var(--lg);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:11px;cursor:pointer;font-weight:600;">⬇ CSV</button>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div style="overflow-x:auto;"><table class="tbl"><thead><tr>
+      <th>#</th><th>Red</th><th onclick="sortC('title')">Contenido ↕</th><th>Fecha</th><th>Formato</th>
+      <th onclick="sortC('views')" style="cursor:pointer;">👁 Vistas ↕</th>
+      <th onclick="sortC('likes')" style="cursor:pointer;">❤️ Likes ↕</th>
+      <th onclick="sortC('shares')" style="cursor:pointer;">↗ Comp. ↕</th>
+    </tr></thead><tbody id="cnt-body"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ═══════════════ VISTA AUDIENCIA ═══════════════ -->
+<div id="v-audiencia" style="display:none;">
+  <div class="sh">
+    <div class="sh-l"><h3>Audiencia general dividida por red</h3><p>Cada canal tiene una lectura distinta: comunidad, espectadores, visitantes o seguidores según la métrica disponible.</p></div>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <div class="card-t">Facebook · Comunidad real (25 jun)</div>
+      <div style="text-align:center;margin-bottom:12px;"><div style="font-size:32px;font-weight:800;color:var(--p);">292</div><div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.8px;">Seguidores totales</div></div>
+      <div class="donut-wrap">
+        <canvas id="c-fb-sex" width="90" height="90" style="flex-shrink:0;"></canvas>
+        <div class="donut-leg">
+          <div class="dleg-row"><div class="dleg-dot" style="background:#1877F2;"></div><span style="flex:1;color:var(--txm);">Hombres</span><strong>68.9%</strong></div>
+          <div class="dleg-row"><div class="dleg-dot" style="background:#F9A8D4;"></div><span style="flex:1;color:var(--txm);">Mujeres</span><strong>31.1%</strong></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;"><div class="card-t">Ciudades</div>
+        <div class="hb-row"><div class="hb-lbl">Bogotá</div><div class="hb-track"><div class="hb-fill" style="width:38.4%;background:#1877F2;"></div></div><div class="hb-val">38.4%</div></div>
+        <div class="hb-row"><div class="hb-lbl">Cali</div><div class="hb-track"><div class="hb-fill" style="width:5.5%;background:#1877F2;"></div></div><div class="hb-val">5.5%</div></div>
+        <div class="hb-row"><div class="hb-lbl">Medellín</div><div class="hb-track"><div class="hb-fill" style="width:4.1%;background:#1877F2;"></div></div><div class="hb-val">4.1%</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-t">Instagram · Comunidad y comportamiento</div>
+      <div style="text-align:center;margin-bottom:12px;"><div style="font-size:32px;font-weight:800;color:#E1306C;">+8</div><div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.8px;">Nuevos seguidores en junio</div></div>
+      <div class="hb-row"><div class="hb-lbl">Visualizaciones</div><div class="hb-track"><div class="hb-fill" style="width:100%;background:#E1306C;"></div></div><div class="hb-val">6,524</div></div>
+      <div class="hb-row"><div class="hb-lbl">Interacciones</div><div class="hb-track"><div class="hb-fill" style="width:82%;background:#833AB4;"></div></div><div class="hb-val">537</div></div>
+      <div class="hb-row"><div class="hb-lbl">Historias vistas</div><div class="hb-track"><div class="hb-fill" style="width:48%;background:#F472B6;"></div></div><div class="hb-val">994</div></div>
+      <div class="ibox amber" style="margin-top:10px;"><div class="ibox-t">Lectura</div><p>Instagram está generando exposición e interacción, pero el reto es convertir esa atención en seguidores y conversaciones por WhatsApp.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-t">TikTok · Espectadores (últimos 28d)</div>
+      <div style="text-align:center;margin-bottom:12px;"><div style="font-size:32px;font-weight:800;color:var(--p);">~1.9K</div><div style="font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:.8px;">Espectadores únicos</div></div>
+      <div class="donut-wrap">
+        <canvas id="c-tt-sex" width="90" height="90" style="flex-shrink:0;"></canvas>
+        <div class="donut-leg">
+          <div class="dleg-row"><div class="dleg-dot" style="background:#EC4899;"></div><span style="flex:1;">Mujeres</span><strong>54%</strong></div>
+          <div class="dleg-row"><div class="dleg-dot" style="background:#111;"></div><span style="flex:1;">Hombres</span><strong>46%</strong></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;"><div class="card-t">Edad espectadores</div>
+        <div class="ch-wrap" style="height:100px;"><canvas id="c-tt-age"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="g3" style="margin-top:14px;">
+    <div class="card"><div class="card-t">YouTube · Comportamiento y dispositivos</div>
+      <div class="hb-row"><div class="hb-lbl">Usuarios nuevos</div><div class="hb-track"><div class="hb-fill" style="width:90.7%;background:#CC0000;"></div></div><div class="hb-val">90.7%</div></div>
+      <div class="hb-row"><div class="hb-lbl">Ocasionales</div><div class="hb-track"><div class="hb-fill" style="width:9.3%;background:#FF6B6B;"></div></div><div class="hb-val">9.3%</div></div>
+      <div style="margin-top:10px;"><div class="card-t">Dispositivos</div>
+      <div class="hb-row"><div class="hb-lbl">Teléfono móvil</div><div class="hb-track"><div class="hb-fill" style="width:70.1%;background:#CC0000;"></div></div><div class="hb-val">70.1%</div></div>
+      <div class="hb-row"><div class="hb-lbl">Ordenador</div><div class="hb-track"><div class="hb-fill" style="width:26.3%;background:#CC0000;"></div></div><div class="hb-val">26.3%</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-t">LinkedIn · Seguidores por función laboral</div>
+      <div class="hb-row"><div class="hb-lbl">Operaciones</div><div class="hb-track"><div class="hb-fill" style="width:100%;background:#0A66C2;"></div></div><div class="hb-val">105</div></div>
+      <div class="hb-row"><div class="hb-lbl">Des. empresarial</div><div class="hb-track"><div class="hb-fill" style="width:30%;background:#0A66C2;"></div></div><div class="hb-val">32</div></div>
+      <div class="hb-row"><div class="hb-lbl">Contabilidad</div><div class="hb-track"><div class="hb-fill" style="width:27%;background:#0A66C2;"></div></div><div class="hb-val">28</div></div>
+      <div class="hb-row"><div class="hb-lbl">Administración</div><div class="hb-track"><div class="hb-fill" style="width:21%;background:#0A66C2;"></div></div><div class="hb-val">22</div></div>
+      <div class="hb-row"><div class="hb-lbl">TI</div><div class="hb-track"><div class="hb-fill" style="width:17%;background:#0A66C2;"></div></div><div class="hb-val">18</div></div>
+      <div class="hb-row"><div class="hb-lbl">Ventas</div><div class="hb-track"><div class="hb-fill" style="width:16%;background:#0A66C2;"></div></div><div class="hb-val">17</div></div>
+      <div class="ibox blue" style="margin-top:10px;"><div class="ibox-t">🎯 Insight B2B</div><p>Operaciones + Des. empresarial = 62% de seguidores. Son los <strong>tomadores de decisión</strong> para contratos empresariales.</p></div>
+    </div>
+    <div class="card"><div class="card-t">🎵 TikTok · Fuentes de tráfico</div><div class="ch-wrap" style="height:180px;"><canvas id="c-tt-traffic"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ JULIO ═══════════════ -->
+<div id="v-julio" style="display:none;">
+  <div class="jul-hero">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--bl);text-transform:uppercase;margin-bottom:6px;">Plan estratégico</div>
+    <h2>Estrategia siguiente mes</h2>
+    <p>Julio debe consolidar confianza, conversación y recordación. La pauta no reemplaza el contenido: puede acelerar los aprendizajes si se activa con presupuesto controlado.</p>
+    <div class="jul-meta">
+      <div class="jul-chip">Horizonte<strong>Julio 2026</strong></div>
+      <div class="jul-chip">Escenario 1<strong>Solo orgánico</strong></div>
+      <div class="jul-chip">Escenario 2<strong>Meta Ads</strong></div>
+      <div class="jul-chip">Presupuesto pauta<strong>$800K–$1M</strong></div>
+      <div class="jul-chip">Redes<strong>5 canales activos</strong></div>
+    </div>
+  </div>
+
+  <div class="alert-box"><strong>Nota estratégica:</strong> Hay dos caminos posibles. La ruta orgánica sostiene presencia y confianza. La ruta con pauta en Meta amplifica las mejores piezas hacia audiencias empresariales, sin comprometer presupuestos altos.</div>
+
+  <div class="g2" style="margin-bottom:20px;">
+    <div class="pauta-card" style="border-color:#10B981;">
+      <div class="pc-header">
+        <div>
+          <div class="pc-platform">Escenario A · Solo orgánico</div>
+          <div style="font-size:11px;color:var(--gr);margin-top:2px;">Recomendado si julio se usa para consolidar consistencia y conversación.</div>
+        </div>
+        <div class="pc-budget" style="background:#10B981;">$0 pauta</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-item"><div class="pi-l">Objetivo</div><div class="pi-v">Mantener visibilidad, autoridad y recordación en empresas.</div></div>
+        <div class="pc-item"><div class="pi-l">Cadencia</div><div class="pi-v">3–4 publicaciones semanales + historias de apoyo.</div></div>
+        <div class="pc-item"><div class="pi-l">Foco</div><div class="pi-v">TKC Corp: restaurantes, hoteles, PH, bodegas y operaciones.</div></div>
+        <div class="pc-item"><div class="pi-l">Conversión</div><div class="pi-v">CTAs claros en comentarios y derivación manual a WhatsApp.</div></div>
+      </div>
+      <div class="goal-box" style="background:#065F46;">
+        <strong style="font-size:13px;">Qué buscaríamos</strong>
+        <p>Más estabilidad de contenido, mejor reconocimiento de marca y señales orgánicas de interés. Los contactos pueden aparecer, pero no deben ser la única forma de evaluar este escenario.</p>
+      </div>
+    </div>
+
+    <div class="pauta-card">
+      <div class="pc-header">
+        <div>
+          <div class="pc-platform">Escenario B · Orgánico + Meta Ads</div>
+          <div style="font-size:11px;color:var(--gr);margin-top:2px;">Opción de prueba controlada solo en Facebook e Instagram.</div>
+        </div>
+        <div class="pc-budget">$800K–$1M COP</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-item"><div class="pi-l">Objetivo de campaña</div><div class="pi-v">Mensajes a WhatsApp Business o interacción con publicaciones.</div></div>
+        <div class="pc-item"><div class="pi-l">Inversión diaria</div><div class="pi-v">$27K–$33K COP/día durante 30 días.</div></div>
+        <div class="pc-item"><div class="pi-l">Audiencia</div><div class="pi-v">Bogotá y ciudades principales · administradores, gerentes, propietarios y operaciones.</div></div>
+        <div class="pc-item"><div class="pi-l">Sectores</div><div class="pi-v">Restaurantes, hoteles, propiedad horizontal, bodegas, alimentos, HSEQ.</div></div>
+        <div class="pc-item"><div class="pi-l">Piezas a pautar</div><div class="pi-v">2–3 reels con mejor retención: riesgo invisible, visita preventiva y sector restaurantes/hoteles.</div></div>
+        <div class="pc-item"><div class="pi-l">Canal</div><div class="pi-v">Solo Meta Ads: Facebook + Instagram. No LinkedIn Ads en esta etapa.</div></div>
+      </div>
+      <div class="goal-box">
+        <strong style="font-size:13px;">Qué buscaríamos</strong>
+        <p>Generar aprendizaje de audiencia, más visitas al perfil y primeras conversaciones documentadas por WhatsApp. La pauta serviría como prueba controlada, no como promesa cerrada de resultados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANOTACIONES DE CONTENIDO -->
+  <div class="jul-section">
+    <h3>📱 Anotaciones para convertir en contenidos</h3>
+    <div style="font-size:12px;color:var(--gr);margin-bottom:14px;">No es un calendario cerrado. Son rutas de contenido para desarrollar mejor cuando armemos julio: primero empresas, luego hogares, mostrando más operación real, acompañamiento y prevención.</div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="cc-week">Oportunidad</div>
+        <div class="cc-title">Más campo, menos piezas estáticas</div>
+        <div class="cc-desc">Grabar visitas reales, zonas de revisión, bodegas, cocinas, exteriores, tanques, puntos críticos y lugares de operación. Esto aumenta confianza y hace que la marca se sienta más cercana.</div>
+        <div class="cc-tags"><span class="cc-tag ig">IG Reel</span><span class="cc-tag tt">TikTok</span><span class="cc-tag yt">YT Short</span></div>
+      </div>
+      <div class="content-card">
+        <div class="cc-week">Convertir</div>
+        <div class="cc-title">Riesgos invisibles en empresas</div>
+        <div class="cc-desc">Transformar señales pequeñas en reels o carruseles: puertas abiertas, zonas húmedas, bodegas sin revisión, residuos, grietas y puntos donde el riesgo avanza en silencio.</div>
+        <div class="cc-tags"><span class="cc-tag li">LinkedIn</span><span class="cc-tag fb">Facebook</span></div>
+      </div>
+      <div class="content-card">
+        <div class="cc-week">Enfoque Corp</div>
+        <div class="cc-title">Sectores prioritarios</div>
+        <div class="cc-desc">Crear contenidos por sector: restaurantes, hoteles, PH, bodegas, oficinas y operaciones con alto flujo. Cada pieza debe hablar de prevención, reputación y continuidad operativa.</div>
+        <div class="cc-tags"><span class="cc-tag ig">IG Reel</span><span class="cc-tag tt">TikTok</span><span class="cc-tag fb">FB</span></div>
+      </div>
+      <div class="content-card">
+        <div class="cc-week">Diferencial</div>
+        <div class="cc-title">TKC acompaña, no solo aplica</div>
+        <div class="cc-desc">Mostrar diagnóstico, asesoría, revisión de puntos críticos y recomendaciones. La idea es que se entienda que TKC ayuda a prevenir, no solo llega cuando el problema ya explotó.</div>
+        <div class="cc-tags"><span class="cc-tag ig">IG Carrusel</span><span class="cc-tag li">LinkedIn</span></div>
+      </div>
+      <div class="content-card">
+        <div class="cc-week">Confianza</div>
+        <div class="cc-title">Casos, testimonios y prueba social</div>
+        <div class="cc-desc">Si hay autorización, convertir experiencias de clientes en piezas breves. Si no hay video, usar aprendizaje del caso sin mencionar nombres ni datos sensibles.</div>
+        <div class="cc-tags"><span class="cc-tag tt">TikTok</span><span class="cc-tag ig">IG Reel</span><span class="cc-tag yt">YT Short</span></div>
+      </div>
+      <div class="content-card">
+        <div class="cc-week">Líneas TKC</div>
+        <div class="cc-title">Hídriko y Security como apoyo</div>
+        <div class="cc-desc">Integrarlas en cápsulas puntuales cuando sumen al mensaje de prevención. El foco principal sigue siendo Corp; Home puede aparecer como complemento, no como eje.</div>
+        <div class="cc-tags"><span class="cc-tag ig">IG</span><span class="cc-tag fb">FB</span><span class="cc-tag li">LinkedIn</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÉTRICAS DE SEGUIMIENTO -->
+  <div class="jul-section">
+    <h3>📊 Qué monitoreamos en julio</h3>
+    <div style="overflow-x:auto;background:#fff;border-radius:12px;border:1px solid var(--border);box-shadow:var(--sh);">
+      <table class="tbl">
+        <thead><tr><th>Indicador</th><th>Canal</th><th>Lectura</th><th>Cómo se mide</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mensajes o conversaciones WA</strong></td><td>Meta / orgánico</td><td>Señal comercial directa</td><td>WhatsApp Business · registro manual</td></tr>
+          <tr><td>Nuevos seguidores IG</td><td>Instagram</td><td>Capacidad de retención de audiencia</td><td>Meta Business Suite</td></tr>
+          <tr><td>Clics en enlace IG + FB</td><td>Meta</td><td>Interés de contacto</td><td>Meta Business Suite</td></tr>
+          <tr><td>Respuestas a historias</td><td>Instagram / Facebook</td><td>Conversación orgánica</td><td>Meta Business Suite</td></tr>
+          <tr><td>Contactos cualificados LI</td><td>LinkedIn</td><td>Señales B2B</td><td>Seguimiento directo</td></tr>
+          <tr><td>Costo por conversación WA</td><td>Meta Ads</td><td>Solo si se activa pauta</td><td>Meta Ads Manager</td></tr>
+          <tr><td>Vistas TikTok totales</td><td>TikTok</td><td>Alcance de descubrimiento</td><td>TikTok Studio XLS</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PARRILLA ═══════════════ -->
+<div id="v-parrilla" style="display:none;">
+  <div style="background:linear-gradient(135deg,var(--p),var(--pm));border-radius:14px;padding:20px 24px;color:#fff;margin-bottom:20px;">
+    <div style="font-size:9px;font-weight:700;letter-spacing:2px;color:var(--bl);text-transform:uppercase;margin-bottom:4px;">Contenidos de junio</div>
+    <h2 style="font-size:20px;font-weight:800;">¿Cuáles fueron los contenidos de junio?</h2>
+    <p style="font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;">Publicadas + pendientes · Lectura operativa y estratégica de la parrilla</p>
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 14px;">Publicadas<strong style="display:block;font-size:18px;font-weight:800;">16</strong></div>
+      <div style="background:rgba(245,158,11,.25);border:1px solid rgba(245,158,11,.4);border-radius:8px;padding:8px 14px;">Por publicar<strong style="display:block;font-size:18px;font-weight:800;">5</strong></div>
+      <div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px 14px;">Total en parrilla<strong style="display:block;font-size:18px;font-weight:800;">21</strong></div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <select id="par-filter-estado" onchange="filterParrilla()" style="border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;background:#fff;">
+      <option value="all">Todos los estados</option>
+      <option value="pub">✅ Publicados</option>
+      <option value="prog">🟡 Por publicar</option>
+    </select>
+    <select id="par-filter-linea" onchange="filterParrilla()" style="border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;background:#fff;">
+      <option value="all">Todas las líneas</option>
+      <option value="General">General</option>
+      <option value="Corp">TKC Corp</option>
+      <option value="Home">TKC Home</option>
+      <option value="Hídriko">Hídriko</option>
+      <option value="Security">TKC Security</option>
+    </select>
+    <input id="par-search" oninput="filterParrilla()" type="text" placeholder="Buscar..." style="border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;flex:1;min-width:140px;">
+    <button onclick="exportParrillaCSV()" style="background:var(--lg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;cursor:pointer;font-weight:600;">⬇ Exportar CSV</button>
+  </div>
+
+  <!-- Grid view -->
+  <div id="par-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;"></div>
+
+  <!-- Table view toggle -->
+  <div style="margin-top:20px;">
+    <button onclick="toggleParrillaView()" id="par-view-btn" style="background:var(--lg);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:11px;cursor:pointer;font-weight:600;margin-bottom:12px;">Ver como tabla</button>
+    <div id="par-table" style="display:none;overflow-x:auto;background:#fff;border-radius:12px;border:1px solid var(--border);">
+      <table class="tbl"><thead><tr>
+        <th>#</th><th>Fecha</th><th>Estado</th><th>Pieza</th><th>Formato</th><th>Canales</th><th>Hook</th><th>CTA</th><th>Objetivo</th>
+      </tr></thead><tbody id="par-tbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div style="padding:16px 32px;text-align:center;font-size:10px;color:var(--gr);border-top:1px solid var(--border);background:#fff;margin-top:24px;">
+  TKC Fumigaciones Group · Dashboard Digital Junio 2026 · Fuentes: Meta Business Suite, TikTok Studio XLS, YouTube Studio, LinkedIn Analytics XLS
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+let D = {
+  fb:{ vis:5204,int:258,seg:5,esp:2014,tot:292, may_vis:1894,may_int:89,may_seg:3,may_esp:724 },
+  ig:{ vis:6524,int:537,seg:8,alc:1200, may_vis:2874,may_int:197,may_seg:21,may_alc:744 },
+  tt:{ vis:3110,mg:133,sh:20,pv:60, may_vis:683,may_mg:31,may_sh:9 },
+  yt:{ vis:486,sub:4,ctr:3.1,hrs:1.0, may_vis:966,may_sub:12,may_hrs:1.9 },
+  li:{ imp:984,cli:214,rec:30,seg:4, may_imp:76,may_cli:4 },
+};
+
+// TikTok daily from XLS
+const TT_DAILY_DATES=['25/5','26/5','27/5','28/5','29/5','30/5','31/5','1/6','2/6','3/6','4/6','5/6','6/6','7/6','8/6','9/6','10/6','11/6','12/6','13/6','14/6','15/6','16/6','17/6','18/6','19/6','20/6','21/6','22/6','23/6','24/6'];
+const TT_VIEWS=[77,316,39,71,176,34,33,46,137,4,13,258,427,110,53,25,37,22,224,54,28,36,36,115,220,6,10,195,59,112,137];
+const TT_LIKES=[9,3,2,7,10,3,0,4,4,0,1,12,21,1,2,0,1,0,15,4,0,1,1,4,2,0,0,8,0,5,13];
+
+// LinkedIn daily
+const LI_DATES=['25/5','26/5','27/5','28/5','29/5','30/5','31/5','1/6','2/6','3/6','4/6','5/6','6/6','7/6','8/6','9/6','10/6','11/6','12/6','13/6','14/6','15/6','16/6','17/6','18/6','19/6','20/6','21/6','22/6','23/6'];
+const LI_IMP=[10,124,73,18,9,24,30,6,83,48,52,24,85,20,15,15,16,64,48,23,24,31,6,57,20,18,1,7,19,14];
+const LI_CLI=[9,55,36,0,5,24,5,0,16,1,1,1,4,0,0,1,2,7,0,1,9,9,1,3,1,5,3,0,12,3];
+
+const CONTENT=[
+  {net:'ig',nl:'Instagram',title:'Un solo hallazgo puede poner en riesgo tu operación',date:'25-may',fmt:'Reel',fc:'t-r',views:653,likes:41,shares:3},
+  {net:'ig',nl:'Instagram',title:'Una sola voz — Día Mundial MP',date:'06-jun',fmt:'Publicación',fc:'t-p',views:484,likes:34,shares:4},
+  {net:'ig',nl:'Instagram',title:'Hoy no solo hablamos de medio ambiente',date:'05-jun',fmt:'Reel',fc:'t-r',views:359,likes:25,shares:2},
+  {net:'ig',nl:'Instagram',title:'¿Tu empresa necesita control de plagas?',date:'11-jun',fmt:'Reel',fc:'t-r',views:321,likes:18,shares:0},
+  {net:'ig',nl:'Instagram',title:'¿Está tu organización lista para una emergencia?',date:'28-may',fmt:'Publicación',fc:'t-p',views:278,likes:18,shares:1},
+  {net:'fb',nl:'Facebook',title:'Día Mundial del Control de Plagas',date:'06-jun',fmt:'Video',fc:'t-v',views:382,likes:6,shares:1},
+  {net:'fb',nl:'Facebook',title:'Hoy debuta nuestra Selección 🇨🇴',date:'17-jun',fmt:'Video',fc:'t-v',views:367,likes:6,shares:1},
+  {net:'fb',nl:'Facebook',title:'¿Está tu organización lista para una emergencia?',date:'28-may',fmt:'Reel',fc:'t-r',views:347,likes:14,shares:0},
+  {net:'fb',nl:'Facebook',title:'Hoy juega Colombia y el país se mueve',date:'23-jun',fmt:'Video',fc:'t-v',views:306,likes:7,shares:0},
+  {net:'fb',nl:'Facebook',title:'Mientras ves esto, algo puede estar pasando',date:'01-jun',fmt:'Reel',fc:'t-r',views:272,likes:5,shares:0},
+  {net:'tt',nl:'TikTok',title:'🌎 Hoy no solo hablamos de medio ambiente (XLS exacto)',date:'05-jun',fmt:'Video',fc:'t-v',views:534,likes:21,shares:4},
+  {net:'tt',nl:'TikTok',title:'Un solo hallazgo puede poner en riesgo tu operación',date:'28-may',fmt:'Video',fc:'t-v',views:517,likes:15,shares:1},
+  {net:'tt',nl:'TikTok',title:'Hay riesgos en tu espacio que no ves',date:'?',fmt:'Video',fc:'t-v',views:477,likes:20,shares:11},
+  {net:'tt',nl:'TikTok',title:'¿Tu empresa necesita control de plagas?',date:'11-jun',fmt:'Video',fc:'t-v',views:299,likes:15,shares:0},
+  {net:'tt',nl:'TikTok',title:'⚠ Hoy juega Colombia (6,419 vistas — snapshot fuera rango)',date:'23-jun',fmt:'Video',fc:'t-v',views:6419,likes:7,shares:0},
+  {net:'yt',nl:'YouTube',title:'Mientras ves esto, algo puede estar pasando',date:'01-jun',fmt:'Short',fc:'t-s',views:235,likes:null,shares:null},
+  {net:'yt',nl:'YouTube',title:'Un solo hallazgo puede poner en riesgo tu operación',date:'25-may',fmt:'Short',fc:'t-s',views:93,likes:null,shares:null},
+  {net:'yt',nl:'YouTube',title:'Día Mundial del Control de Plagas',date:'06-jun',fmt:'Short',fc:'t-s',views:44,likes:null,shares:null},
+  {net:'li',nl:'LinkedIn',title:'En muchas empresas el control de plagas se considera cuando hay señales',date:'26-may',fmt:'Post',fc:'t-p',views:157,likes:3,shares:1},
+  {net:'li',nl:'LinkedIn',title:'Vacante: Gestor Integral de Saneamiento',date:'03-jun',fmt:'Post',fc:'t-p',views:223,likes:2,shares:2},
+  {net:'li',nl:'LinkedIn',title:'Día Mundial Control de Plagas',date:'06-jun',fmt:'Video',fc:'t-v',views:74,likes:3,shares:2},
+  {net:'li',nl:'LinkedIn',title:'Hídriko — Tanque de agua (51.2% CTR)',date:'27-may',fmt:'Post',fc:'t-p',views:84,likes:3,shares:0},
+];
+
+// ═══════════════════════════════════════
+// CHARTS (initialized on load)
+// ═══════════════════════════════════════
+Chart.defaults.font.family="'-apple-system','BlinkMacSystemFont','Segoe UI',sans-serif'";
+Chart.defaults.plugins.legend.display=false;
+
+let charts={};
+function mkChart(id,cfg){
+  const el=document.getElementById(id);
+  if(!el)return;
+  if(charts[id]){charts[id].destroy();}
+  charts[id]=new Chart(el,cfg);
+}
+
+const COMP_COLORS=['C7D2E8','1877F2','833AB4','111111','CC0000','0A66C2'];
+
+function buildAllCharts(){
+  // Global comparison
+  mkChart('c-comp',{type:'bar',data:{
+    labels:['Instagram','Facebook','TikTok','YouTube','LinkedIn'],
+    datasets:[
+      {label:'Mayo',data:[D.ig.may_vis,D.fb.may_vis,D.tt.may_vis,D.yt.may_vis,D.li.may_imp],backgroundColor:'rgba(199,210,232,.85)',borderRadius:4},
+      {label:'Junio',data:[D.ig.vis,D.fb.vis,D.tt.vis,D.yt.vis,D.li.imp],backgroundColor:['#E1306C','#1877F2','#111111','#CC0000','#0A66C2'],borderRadius:4},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10,padding:12}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9},callback:v=>v>=1000?(v/1000).toFixed(1)+'K':v}}}}});
+
+  // FB comparison
+  mkChart('c-fb-comp',{type:'bar',data:{
+    labels:['Visualizaciones','Interacciones','Espectadores','Nuevos seg.'],
+    datasets:[
+      {label:'Mayo',data:[D.fb.may_vis,D.fb.may_int,D.fb.may_esp,D.fb.may_seg],backgroundColor:'rgba(199,210,232,.85)',borderRadius:4},
+      {label:'Junio',data:[D.fb.vis,D.fb.int,D.fb.esp,D.fb.seg],backgroundColor:'#1877F2',borderRadius:4},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+
+  // FB formats
+  mkChart('c-fb-fmt',{type:'bar',data:{labels:['Reels','Foto','Varias fotos','Historias','Otros'],datasets:[{data:[2812,1219,644,494,35],backgroundColor:['#250045','#3F3A66','#1A7DC4','#4AABE8','#C7D2E8'],borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.toLocaleString()} vistas`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+
+  // IG comparison
+  mkChart('c-ig-comp',{type:'bar',data:{
+    labels:['Visualizaciones','Interacciones','Alcance','Nuevos seg.'],
+    datasets:[
+      {label:'Mayo',data:[D.ig.may_vis,D.ig.may_int,D.ig.may_alc,D.ig.may_seg],backgroundColor:'rgba(199,210,232,.85)',borderRadius:4},
+      {label:'Junio',data:[D.ig.vis,D.ig.int,D.ig.alc,D.ig.seg],backgroundColor:'#E1306C',borderRadius:4},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+
+  // TT daily (exact from XLS)
+  mkChart('c-tt-daily',{type:'bar',data:{
+    labels:TT_DAILY_DATES,
+    datasets:[
+      {type:'bar',label:'Vistas/día',data:TT_VIEWS,backgroundColor:'rgba(17,17,17,.75)',borderRadius:2,yAxisID:'y'},
+      {type:'line',label:'Me gusta',data:TT_LIKES,borderColor:'#F59E0B',borderWidth:2,backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.4,pointRadius:2,yAxisID:'y2'},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:45,maxTicksLimit:16}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}},title:{display:true,text:'Vistas',font:{size:9}}},y2:{position:'right',grid:{display:false},ticks:{font:{size:9}},title:{display:true,text:'Likes',font:{size:9}}}}}});
+
+  // Top videos TikTok
+  const ttVids=[
+    {t:'Hoy juega Colombia 🇨🇴 (snapshot)',v:6419,mg:7},{t:'Hoy no solo hablamos de medio ambiente 🌎',v:534,mg:21},
+    {t:'Un solo hallazgo...',v:517,mg:15},{t:'Hay riesgos en tu espacio...',v:477,mg:20},
+    {t:'¿Tu empresa necesita control de plagas?',v:299,mg:15},
+  ];
+  const ttHtml=ttVids.map((v,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:7px 10px;background:${i===0?'#FFF7ED':'var(--lg)'};border-radius:8px;${i===0?'border:1px solid #FCD34D;':''}"><span style="background:${i===0?'#F59E0B':'#111'};color:#fff;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">${i+1}</span><span style="flex:1;font-size:11px;color:var(--txm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.t}</span><span style="font-size:11px;font-weight:700;white-space:nowrap;">${v.v.toLocaleString()}</span><span style="font-size:10px;color:#F59E0B;white-space:nowrap;">❤ ${v.mg}</span></div>`).join('');
+  const ttEl=document.getElementById('tt-top-videos');
+  if(ttEl)ttEl.innerHTML=ttHtml+(i=>`<div style="font-size:9px;color:var(--gr);margin-top:4px;">⚠ #1 es snapshot posterior al corte (23 jun). No incluida en los 3,110 del período.</div>`)();
+
+  // YT comparison
+  mkChart('c-yt-comp',{type:'bar',data:{
+    labels:['Visualizaciones','Tiempo vis. (min)','Nuevos subs.'],
+    datasets:[
+      {label:'Mayo (6-31 may)',data:[D.yt.may_vis,Math.round(D.yt.may_hrs*60),D.yt.may_sub],backgroundColor:'rgba(199,210,232,.85)',borderRadius:4},
+      {label:'Junio (25may-24jun)',data:[D.yt.vis,Math.round(D.yt.hrs*60),D.yt.sub],backgroundColor:'#CC0000',borderRadius:4},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10,padding:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+
+  mkChart('c-yt-traffic',{type:'bar',data:{
+    labels:['Feed Shorts','Páginas canal','Fuentes externas','Búsqueda YT'],
+    datasets:[{data:[76.5,10.3,5.8,5.6],backgroundColor:['#CC0000','#FF6B6B','#FF9999','#FFBBBB'],borderRadius:4}]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw}%`}}},scales:{x:{grid:{display:false},max:100,ticks:{font:{size:9},callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+
+  // LinkedIn daily
+  mkChart('c-li-daily',{type:'bar',data:{
+    labels:LI_DATES,
+    datasets:[
+      {type:'bar',label:'Impresiones',data:LI_IMP,backgroundColor:'rgba(10,102,194,.25)',borderRadius:2,yAxisID:'y'},
+      {type:'line',label:'Clics',data:LI_CLI,borderColor:'#0A66C2',borderWidth:2,backgroundColor:'rgba(10,102,194,.1)',fill:true,tension:.4,pointRadius:2.5,pointBackgroundColor:'#0A66C2',yAxisID:'y2'},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:10}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:45,maxTicksLimit:15}},y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}},title:{display:true,text:'Impresiones',font:{size:9}}},y2:{position:'right',grid:{display:false},ticks:{font:{size:9}},title:{display:true,text:'Clics',font:{size:9}}}}}});
+
+  // Audience donuts
+  mkChart('c-fb-sex',{type:'doughnut',data:{labels:['Hombres','Mujeres'],datasets:[{data:[68.9,31.1],backgroundColor:['#1877F2','#F9A8D4'],borderWidth:0,hoverOffset:4}]},options:{responsive:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}%`}}}}});
+  mkChart('c-tt-sex',{type:'doughnut',data:{labels:['Mujeres','Hombres'],datasets:[{data:[54,46],backgroundColor:['#EC4899','#111'],borderWidth:0,hoverOffset:4}]},options:{responsive:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}%`}}}}});
+  mkChart('c-tt-age',{type:'bar',data:{labels:['18–24','25–34','35–44','45–54','55+'],datasets:[{data:[19.7,41.2,21.9,11.8,5.4],backgroundColor:['#444','#222','#333','#555','#777'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw}%`}}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{display:false}}}});
+  mkChart('c-tt-traffic',{type:'doughnut',data:{labels:['Para Ti (FYP)','Perfil','Buscar','Otros'],datasets:[{data:[85.2,7.6,7.0,0.2],backgroundColor:['#111','#444','#777','#BBB'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:true,position:'right',labels:{font:{size:10},padding:8,boxWidth:10}},tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}%`}}}}});
+
+  filterContent();
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+let curNet='all', curView='general', showComp=true;
+
+function setNet(net,btn){
+  if(curView!=='general'){
+    setView('general');
+  }
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  curNet=net;
+  ['fb','ig','tt','yt','li'].forEach(n=>{
+    const el=document.getElementById('nv-'+n);
+    if(el)el.classList.toggle('show',net===n);
+  });
+  const all=document.getElementById('nv-all');
+  if(all)all.style.display=net==='all'?'':'none';
+  if(document.getElementById('cnt-filter'))document.getElementById('cnt-filter').value=net;
+  filterContent();
+}
+
+function setView(v,btn){
+  document.querySelectorAll('.qtab').forEach(b=>b.classList.remove('active'));
+  (btn||document.querySelector(`.qtab[data-view="${v}"]`))?.classList.add('active');
+  curView=v;
+  ['general','contenido','audiencia','julio','parrilla'].forEach(id=>{
+    const el=document.getElementById('v-'+id);
+    if(el)el.style.display=id===v?'':'none';
+  });
+  const statsControls=document.getElementById('statsControls');
+  if(statsControls)statsControls.style.display=v==='general'?'flex':'none';
+  if(v==='parrilla')renderParrilla();
+}
+
+function toggleComp(){
+  showComp=!showComp;
+  document.getElementById('compTgl').classList.toggle('on',showComp);
+  document.querySelectorAll('.comp-el').forEach(el=>{
+    el.style.opacity=showComp?'1':'0';
+    el.style.pointerEvents=showComp?'':'none';
+  });
+}
+
+// ═══════════════════════════════════════
+// CONTENT TABLE
+// ═══════════════════════════════════════
+let cSort='views',cAsc=false;
+function sortC(k){cSort=k;cAsc=!cAsc;filterContent();}
+function filterContent(){
+  const net=document.getElementById('cnt-filter')?.value||'all';
+  let d=[...CONTENT].filter(r=>net==='all'||r.net===net);
+  d.sort((a,b)=>{
+    const av=typeof a[cSort]==='string'?a[cSort]:(a[cSort]??-1);
+    const bv=typeof b[cSort]==='string'?b[cSort]:(b[cSort]??-1);
+    return cAsc?(av>bv?1:-1):(av<bv?1:-1);
+  });
+  const tb=document.getElementById('cnt-body');
+  if(!tb)return;
+  tb.innerHTML=d.map((r,i)=>`<tr><td><span class="rank">${i+1}</span></td><td style="font-size:11px;font-weight:600;">${r.nl}</td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.title}">${r.title}</td><td style="white-space:nowrap;font-size:11px;">${r.date}</td><td><span class="tag ${r.fc}">${r.fmt}</span></td><td style="font-weight:700;">${r.views?.toLocaleString()??'N/D'}</td><td>${r.likes??'N/D'}</td><td>${r.shares??'N/D'}</td></tr>`).join('');
+}
+function exportCSV(){
+  const net=document.getElementById('cnt-filter')?.value||'all';
+  const d=CONTENT.filter(r=>net==='all'||r.net===net);
+  const csv=['#,Red,Título,Fecha,Formato,Vistas,Likes,Compartidos',...d.map((r,i)=>`${i+1},${r.nl},"${r.title}",${r.date},${r.fmt},${r.views??''},${r.likes??''},${r.shares??''}`)].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download='TKC_contenido_jun2026.csv';a.click();
+}
+
+// ═══════════════════════════════════════
+// DATA EDITOR
+// ═══════════════════════════════════════
+const EDITOR_FIELDS=[
+  {net:'Facebook',key:'fb',fields:[{l:'Visualizaciones',k:'vis'},{l:'Interacciones',k:'int'},{l:'Nuevos seguidores',k:'seg'},{l:'Espectadores',k:'esp'},{l:'Total comunidad',k:'tot'}]},
+  {net:'Instagram',key:'ig',fields:[{l:'Visualizaciones',k:'vis'},{l:'Interacciones',k:'int'},{l:'Nuevos seguidores',k:'seg'}]},
+  {net:'TikTok',key:'tt',fields:[{l:'Vistas de video',k:'vis'},{l:'Me gusta',k:'mg'},{l:'Compartidos',k:'sh'}]},
+  {net:'YouTube',key:'yt',fields:[{l:'Visualizaciones',k:'vis'},{l:'Nuevos suscriptores',k:'sub'}]},
+  {net:'LinkedIn',key:'li',fields:[{l:'Impresiones',k:'imp'},{l:'Clics',k:'cli'}]},
+];
+function openEditor(){
+  const cont=document.getElementById('editorFields');
+  cont.innerHTML=EDITOR_FIELDS.map(g=>`<div class="ep-net"><h4>${g.net}</h4>${g.fields.map(f=>`<div class="ep-field"><label>${f.l}</label><input id="ed-${g.key}-${f.k}" type="number" value="${D[g.key][f.k]??''}" placeholder="${f.l}"/></div>`).join('')}</div>`).join('');
+  document.getElementById('editorOverlay').classList.add('open');
+}
+function closeEditor(){document.getElementById('editorOverlay').classList.remove('open');}
+function applyEdits(){
+  EDITOR_FIELDS.forEach(g=>g.fields.forEach(f=>{
+    const el=document.getElementById(`ed-${g.key}-${f.k}`);
+    if(el&&el.value!=='')D[g.key][f.k]=Number(el.value);
+  }));
+  // Update hero stats
+  document.getElementById('h-ig-vis').textContent=D.ig.vis.toLocaleString();
+  document.getElementById('h-fb-vis').textContent=D.fb.vis.toLocaleString();
+  document.getElementById('h-tt-vis').textContent=D.tt.vis.toLocaleString();
+  document.getElementById('h-yt-vis').textContent=D.yt.vis.toLocaleString();
+  document.getElementById('h-li-imp').textContent=D.li.imp.toLocaleString();
+  // Update summary cards
+  document.getElementById('s-fb-vis').textContent=D.fb.vis.toLocaleString();
+  document.getElementById('s-fb-int').textContent=D.fb.int.toLocaleString();
+  document.getElementById('s-fb-seg').textContent='+'+D.fb.seg;
+  document.getElementById('s-fb-esp').textContent=D.fb.esp.toLocaleString();
+  document.getElementById('s-fb-tot').textContent=D.fb.tot.toLocaleString();
+  document.getElementById('s-ig-vis').textContent=D.ig.vis.toLocaleString();
+  document.getElementById('s-ig-int').textContent=D.ig.int.toLocaleString();
+  document.getElementById('s-ig-seg').textContent='+'+D.ig.seg;
+  document.getElementById('s-tt-vis').textContent=D.tt.vis.toLocaleString();
+  document.getElementById('s-tt-mg').textContent=D.tt.mg.toLocaleString();
+  document.getElementById('s-tt-sh').textContent=D.tt.sh.toLocaleString();
+  document.getElementById('s-yt-vis').textContent=D.yt.vis.toLocaleString();
+  document.getElementById('s-li-imp').textContent=D.li.imp.toLocaleString();
+  document.getElementById('s-li-cli').textContent=D.li.cli.toLocaleString();
+  buildAllCharts();
+  closeEditor();
+}
+document.getElementById('editorOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('editorOverlay'))closeEditor();});
+
+// ═══════════════════════════════════════
+// PARRILLA
+// ═══════════════════════════════════════
+const PARRILLA=[
+  {n:1,fecha:'05 Jun',dia:'Vie',estado:'✅ Publicado',seccion:'🌱 Medio ambiente',pieza:'Día Mundial del Medio Ambiente: compromiso TKC con espacios protegidos',formato:'Reel',linea:'General',canales:'IG / FB / TikTok / Shorts / LI',hook:'Hoy no solo hablamos de medio ambiente.',cta:'Mantener activo en historias y responder reacciones.',kw:'AMBIENTE',objetivo:'Confianza'},
+  {n:2,fecha:'06 Jun',dia:'Sáb',estado:'✅ Publicado',seccion:'🛡️ Control de plagas',pieza:'Día Mundial del Control de Plagas: profesión que protege lo que importa',formato:'Reel + Post LI',linea:'TKC Corp',canales:'IG / FB / TikTok / Shorts / LI',hook:'Hoy, 6 de junio: Día Mundial del Control de Plagas.',cta:'Responder comentarios y derivar a WhatsApp.',kw:'CONTROL',objetivo:'Autoridad'},
+  {n:3,fecha:'09 Jun',dia:'Mar',estado:'✅ Publicado / reutilizable',seccion:'⚽ Mundial operativo',pieza:'En temporada de fútbol, tu operación también necesita estar lista',formato:'Carrusel',linea:'TKC Corp',canales:'IG / FB',hook:'En temporada de fútbol, tu operación también necesita estar lista.',cta:'Comenta TEMPORADA y te enviamos puntos críticos.',kw:'TEMPORADA',objetivo:'Lead B2B'},
+  {n:4,fecha:'11 Jun',dia:'Jue',estado:'✅ Publicado',seccion:'🤝 Confianza TKC',pieza:'Reel Nacionales / respaldo y confianza TKC',formato:'Reel',linea:'General / Corp',canales:'IG / FB / TikTok / Shorts / LI',hook:'Una operación protegida también necesita respaldo.',cta:'Derivar a VISITA si preguntan proceso.',kw:'VISITA',objetivo:'Confianza + autoridad'},
+  {n:5,fecha:'12 Jun',dia:'Vie',estado:'✅ Publicado / reutilizable',seccion:'🔎 Criterio técnico',pieza:'Las 3 cosas que convierten una señal en una plaga',formato:'Carrusel',linea:'General / Corp',canales:'IG / FB / LI',hook:'No todo insecto es una plaga. Pero estas 3 señales cambian todo.',cta:'Escribe SENAL y cuéntanos qué viste.',kw:'SENAL',objetivo:'Confianza + lead'},
+  {n:6,fecha:'16 Jun',dia:'Mar',estado:'✅ Publicado',seccion:'🕵️ Modo inspección',pieza:'El problema no siempre entra caminando',formato:'Estática',linea:'TKC Corp',canales:'IG / FB / LI',hook:'El problema no siempre entra caminando.',cta:'Comenta VISITA y te decimos qué puntos revisar primero.',kw:'VISITA',objetivo:'Confianza + conversación B2B'},
+  {n:7,fecha:'17 Jun',dia:'Mié',estado:'✅ Publicado',seccion:'🇨🇴 Mundial operativo',pieza:'Hoy debuta Colombia. ¿Y tu operación ya pasó por el VAR?',formato:'Reel IA corto',linea:'TKC Corp / Restaurantes',canales:'IG / FB / TikTok / Shorts',hook:'Hoy debuta Colombia… y tu operación también tiene marcador.',cta:'Comenta VAR y te enviamos el marcador operativo.',kw:'VAR',objetivo:'Interacción + lead'},
+  {n:8,fecha:'17 Jun',dia:'Mié',estado:'✅ Publicado',seccion:'📲 Historias interactivas',pieza:'Predice el marcador de hoy',formato:'Set de historias',linea:'TKC Corp',canales:'IG / FB Stories',hook:'Hoy debuta Colombia. Predice el marcador.',cta:'Responde el marcador y pide VAR operativo.',kw:'VAR',objetivo:'Interacción'},
+  {n:9,fecha:'18 Jun',dia:'Jue',estado:'✅ Publicado',seccion:'💧 Hídriko',pieza:'Hídriko: servicios que cuidan la ruta del agua',formato:'Carrusel',linea:'Hídriko',canales:'IG / FB / LI',hook:'El agua no solo se usa. También se cuida antes de llegar al grifo.',cta:'Comenta HIDRIKO y te contamos qué servicio aplica.',kw:'HIDRIKO',objetivo:'Lead Hídriko'},
+  {n:10,fecha:'19 Jun',dia:'Vie',estado:'✅ Publicado',seccion:'🧪 Viernes sin filtro',pieza:'Dato random: una mosca saborea con las patas',formato:'Estática / reel corto',linea:'TKC Corp / Restaurantes',canales:'IG / FB / TikTok opcional',hook:'Dato random: una mosca puede saborear con las patas.',cta:'Comenta CHECKLIST si quieres revisar tu cocina.',kw:'CHECKLIST',objetivo:'Alcance + lead'},
+  {n:11,fecha:'20 Jun',dia:'Sáb',estado:'✅ Publicado',seccion:'Plaga hablando',pieza:'¿Sabías que una plaga puede llegar en una maleta? (hoteles)',formato:'',linea:'TKC Corp / Hoteles',canales:'IG / FB / TikTok / Shorts / LI',hook:'¿Sabías que una plaga puede llegar a una habitación dentro de una maleta?',cta:'Comenta HOTEL y agenda una revisión preventiva con TKC.',kw:'HOTEL',objetivo:'Lead hotelero'},
+  {n:12,fecha:'22 Jun',dia:'Lun',estado:'✅ Publicado',seccion:'Expectativa Témpano',pieza:'Pieza de expectativa — lanzamiento Témpano',formato:'Post / Historias',linea:'TKC Corp',canales:'IG / FB / LI',hook:'Algo nuevo llega.',cta:'Mantente atento.',kw:'',objetivo:'Expectativa marca'},
+  {n:13,fecha:'23 Jun',dia:'Mar',estado:'✅ Publicado',seccion:'🇨🇴 Mundial operativo',pieza:'Segundo partido Colombia / operación sin tarjeta roja',formato:'Reel grabado',linea:'TKC Corp / Restaurantes',canales:'IG / FB / TikTok / Shorts',hook:'Hoy juega Colombia otra vez… pero tu negocio también se juega un partido.',cta:'Comenta DEFENSA y agenda una revisión preventiva.',kw:'DEFENSA',objetivo:'Lead B2B'},
+  {n:14,fecha:'23 Jun',dia:'Mar',estado:'✅ Publicado',seccion:'📲 Historias interactivas',pieza:'Predice el marcador — Colombia segundo partido',formato:'Set de historias',linea:'TKC Corp',canales:'IG / FB Stories',hook:'Predice el marcador de hoy.',cta:'Pide VAR operativo.',kw:'VAR',objetivo:'Interacción'},
+  {n:15,fecha:'24 Jun',dia:'Mié',estado:'✅ Publicado',seccion:'🧯 TKC Security',pieza:'Fuera de juego: un extintor vencido no defiende nada',formato:'Estática / carrusel',linea:'TKC Security',canales:'IG / FB / LI',hook:'Un extintor vencido está fuera de juego.',cta:'Comenta SECURITY si quieres revisar tu espacio.',kw:'SECURITY',objetivo:'Lead Security'},
+  {n:16,fecha:'25 Jun',dia:'Jue',estado:'✅ Publicado',seccion:'Lanzamiento Témpano',pieza:'Lanzamiento Témpano — tecnología CO₂ llega a TKC',formato:'Reel',linea:'TKC Corp',canales:'IG / FB / TikTok / Shorts / LI',hook:'Llegó una nueva tecnología a TKC.',cta:'Responder preguntas y derivar a contacto.',kw:'TEMPANO',objetivo:'Innovación / marca'},
+  {n:17,fecha:'26 Jun',dia:'Vie',estado:'🟡 Programar',seccion:'✅ Lead magnet',pieza:'Checklist antes de un fin de semana con alto movimiento',formato:'Carrusel',linea:'Restaurantes / bares / PH',canales:'IG / FB / LI',hook:'Antes del fin de semana, revisa estos 5 puntos.',cta:'Comenta CHECKLIST y te lo enviamos por WhatsApp.',kw:'CHECKLIST',objetivo:'Lead magnet'},
+  {n:18,fecha:'27 Jun',dia:'Sáb',estado:'🟡 Programar',seccion:'🇨🇴 Mundial operativo',pieza:'Colombia vs Portugal: que tu operación no se vaya a penales',formato:'Reel',linea:'TKC Corp',canales:'IG / FB / TikTok / Shorts',hook:'Hoy Colombia vs Portugal. Que tu operación no se vaya a penales.',cta:'Comenta VAR o DEFENSA y recibe el marcador operativo.',kw:'VAR',objetivo:'Lead partido'},
+  {n:19,fecha:'27 Jun',dia:'Sáb',estado:'🟡 Programar',seccion:'🇨🇴 Mundial operativo',pieza:'Predice marcador Colombia vs Portugal — historias',formato:'Set de historias',linea:'TKC Corp',canales:'IG / FB Stories',hook:'Predice el marcador: Colombia vs Portugal.',cta:'Pide VAR operativo.',kw:'VAR',objetivo:'Interacción + DM'},
+  {n:20,fecha:'30 Jun',dia:'Mar',estado:'🟡 Programar',seccion:'🏨 Hoteles y alojamientos',pieza:'Chinche de cama / prevención para hoteles y alojamientos',formato:'Reel',linea:'TKC Corp / Hoteles',canales:'IG / FB / TikTok / Shorts / LI',hook:'¿Sabías que una plaga puede llegar a una habitación dentro de una maleta?',cta:'Comenta HOTEL y agenda revisión preventiva.',kw:'HOTEL',objetivo:'Lead hotelero'},
+  {n:21,fecha:'25 Jun',dia:'Jue',estado:'🟡 Programar',seccion:'🏢 Propiedad horizontal',pieza:'Zonas comunes: señales que se vuelven quejas',formato:'Carrusel',linea:'TKC Corp / PH',canales:'IG / FB / LI',hook:'Una queja en zona común casi nunca empieza el día que llega al chat.',cta:'Comenta VISITA si administras un espacio.',kw:'VISITA',objetivo:'Lead PH'},
+];
+
+let parView='grid';
+function toggleParrillaView(){
+  parView=parView==='grid'?'table':'grid';
+  document.getElementById('par-grid').style.display=parView==='grid'?'grid':'none';
+  document.getElementById('par-table').style.display=parView==='table'?'block':'none';
+  document.getElementById('par-view-btn').textContent=parView==='grid'?'Ver como tabla':'Ver como tarjetas';
+}
+
+function filterParrilla(){
+  const est=document.getElementById('par-filter-estado').value;
+  const lin=document.getElementById('par-filter-linea').value;
+  const q=(document.getElementById('par-search').value||'').toLowerCase();
+  const data=PARRILLA.filter(r=>{
+    if(est==='pub'&&!r.estado.includes('✅'))return false;
+    if(est==='prog'&&!r.estado.includes('🟡'))return false;
+    if(lin!=='all'&&!r.linea.toLowerCase().includes(lin.toLowerCase()))return false;
+    if(q&&!r.pieza.toLowerCase().includes(q)&&!r.hook.toLowerCase().includes(q)&&!r.objetivo.toLowerCase().includes(q))return false;
+    return true;
+  });
+  renderParrillaWith(data);
+}
+
+function renderParrilla(){filterParrilla();}
+
+const LINE_COLORS={
+  'General':'#250045','Corp':'#1A7DC4','Home':'#10B981','Hídriko':'#0EA5E9','Security':'#EF4444','Restaurantes':'#F59E0B','Hoteles':'#8B5CF6','PH':'#6B7280',
+};
+function lineColor(linea){
+  for(const[k,v]of Object.entries(LINE_COLORS)){if(linea.includes(k))return v;}
+  return '#6B7280';
+}
+
+function renderParrillaWith(data){
+  // Cards
+  const grid=document.getElementById('par-grid');
+  if(grid){
+    grid.innerHTML=data.map(r=>{
+      const pub=r.estado.includes('✅');
+      const reutilizable=r.estado.includes('reutilizable');
+      const col=lineColor(r.linea);
+      const badgeBg=pub?'#D1FAE5':'#FFFBEB';
+      const badgeTx=pub?'#065F46':'#92400E';
+      const badge=reutilizable?` <span style="background:#EFF6FF;color:#1E40AF;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:5px;">Reutilizable</span>`:'';
+      return `<div style="background:#fff;border-radius:12px;border:1px solid var(--border);border-top:3px solid ${col};box-shadow:var(--sh);padding:14px;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+          <span style="font-size:11px;font-weight:700;color:var(--gr);">#${r.n} · ${r.fecha}</span>
+          <span style="background:${badgeBg};color:${badgeTx};font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">${pub?'✅':'🟡'} ${pub?'Publicado':'Programar'}${badge}</span>
+        </div>
+        <div style="font-size:9px;color:${col};font-weight:700;text-transform:uppercase;letter-spacing:.6px;">${r.seccion}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--txt);line-height:1.4;">${r.pieza||'(ver hook)'}</div>
+        <div style="font-size:11px;color:var(--gr);line-height:1.5;font-style:italic;">"${r.hook}"</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+          <span style="background:var(--lg);border-radius:8px;padding:2px 8px;font-size:9px;font-weight:600;color:var(--gr);">${r.formato||'—'}</span>
+          <span style="background:var(--lg);border-radius:8px;padding:2px 8px;font-size:9px;color:var(--gr);">${r.canales}</span>
+        </div>
+        <div style="font-size:10px;color:var(--gr);margin-top:2px;"><strong>Objetivo:</strong> ${r.objetivo||'—'}</div>
+        ${r.cta?`<div style="font-size:10px;color:var(--b);margin-top:2px;">📌 ${r.cta}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+  // Table
+  const tb=document.getElementById('par-tbody');
+  if(tb){
+    tb.innerHTML=data.map(r=>{
+      const pub=r.estado.includes('✅');
+      const badgeBg=pub?'#D1FAE5':'#FFFBEB';
+      const badgeTx=pub?'#065F46':'#92400E';
+      return `<tr>
+        <td style="font-weight:700;">${r.n}</td>
+        <td style="white-space:nowrap;">${r.fecha}</td>
+        <td><span style="background:${badgeBg};color:${badgeTx};font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;">${r.estado.replace('/ reutilizable','')}</span></td>
+        <td style="font-size:12px;max-width:220px;"><strong>${r.pieza||r.hook.substring(0,50)}</strong></td>
+        <td>${r.formato||'—'}</td>
+        <td style="font-size:10px;">${r.canales}</td>
+        <td style="font-size:10px;font-style:italic;max-width:180px;">${r.hook||'—'}</td>
+        <td style="font-size:10px;">${r.cta||'—'}</td>
+        <td style="font-size:10px;">${r.objetivo||'—'}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function exportParrillaCSV(){
+  const csv=['#,Fecha,Estado,Pieza,Formato,Canales,Hook,CTA,Objetivo',...PARRILLA.map(r=>`${r.n},${r.fecha},"${r.estado}","${r.pieza.replace(/"/g,"'")}","${r.formato}","${r.canales}","${r.hook.replace(/"/g,"'")}","${(r.cta||'').replace(/"/g,"'")}","${r.objetivo}"`)].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download='TKC_Parrilla_Jun2026.csv';a.click();
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+window.addEventListener('load',()=>{
+  if(new URLSearchParams(window.location.search).get('admin')==='1'){
+    const adminBtn=document.getElementById('adminEditBtn');
+    if(adminBtn)adminBtn.style.display='';
+  }
+  buildAllCharts();
+  // Fix TikTok top videos
+  const ttEl=document.getElementById('tt-top-videos');
+  if(ttEl){
+    const ttVids=[
+      {t:'⚠ Hoy juega Colombia 🇨🇴 (snapshot posterior al corte)',v:6419,mg:7,warn:true},
+      {t:'🌎 Hoy no solo hablamos de medio ambiente',v:534,mg:21,warn:false},
+      {t:'Un solo hallazgo puede poner en riesgo tu operación',v:517,mg:15,warn:false},
+      {t:'Hay riesgos en tu espacio que no ves',v:477,mg:20,warn:false},
+      {t:'¿Tu empresa necesita control de plagas?',v:299,mg:15,warn:false},
+    ];
+    ttEl.innerHTML=ttVids.map((v,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:7px 10px;background:${v.warn?'#FFFBEB':'var(--lg)'};border-radius:8px;${v.warn?'border:1px solid #FCD34D;':''}"><span style="background:${v.warn?'#F59E0B':'#111'};color:#fff;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">${i+1}</span><span style="flex:1;font-size:11px;color:var(--txm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${v.t}</span><span style="font-size:11px;font-weight:700;white-space:nowrap;">${v.v.toLocaleString()}</span><span style="font-size:10px;color:#F59E0B;white-space:nowrap;margin-left:4px;">❤ ${v.mg}</span></div>`).join('');
+  }
+});
+</script>
+</body>
+</html>
